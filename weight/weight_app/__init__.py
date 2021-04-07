@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, redirect, request, session
+import requests
 
 weight_app = Flask(__name__)
 

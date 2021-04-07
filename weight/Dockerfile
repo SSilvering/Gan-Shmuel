@@ -1,0 +1,11 @@
+FROM python:3.8
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip3 install -r requirments.txt
+
+RUN chmod +x weight_run.sh
+
+ENTRYPOINT ["./weight_run.sh"]

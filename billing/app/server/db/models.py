@@ -12,8 +12,8 @@ class Provider(db.Model):
 
     name = Column(String(16), unique=True)
 
-    rates = relationship("Rates", backref="provider")
-    trucks = relationship("Trucks", backref="provider")
+    rates = relationship("Rate", backref="provider")
+    trucks = relationship("Truck", backref="provider")
 
     def __repr__(self):
         return f'PROVIDER id: {self.id}\nname: {self.name}\nrates: {self.rates}'
@@ -30,7 +30,7 @@ class Rate(db.Model):
     provider_id = Column(Integer, ForeignKey('provider.id'))
 
     def __repr__(self):
-        return f'RATES prod id: {self.id} rate: {self.rate} scope: {self.scope}'
+        return f'RATE prod id: {self.id} rate: {self.rate} scope: {self.scope}'
 
 
 class Truck(db.Model):

@@ -1,2 +1,1 @@
 from weight_app import weight_app
-import requests

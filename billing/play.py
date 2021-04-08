@@ -25,3 +25,7 @@
 #
 # up_container('billing')
 # "mkdir -p /home/ec2-user/tmp/build_tomer && cd /home/ec2-user/tmp/build_tomer && git clone https://github.com/SSilvering/Gan-Shmuel.git && cd /home/ec2-user/tmp/build_tomer/tomer && git checkout tomer && docker-compose up --build --force-recreate"
+"""
+Just a test comment, nothing special.....
+In case I don't see you, good afternoon, good evening and good night!
+"""

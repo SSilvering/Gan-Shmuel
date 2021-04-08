@@ -1,7 +1,9 @@
 
 from weight_app import weight_app, requests
-
-
+from time import gmtime, strftime
+from flask import request
+import mysql.connector
+from get_weight import get_weight
 
 @weight_app.route('/')
 @weight_app.route('/index')
@@ -27,3 +29,14 @@ def health_check():
 @weight_app.route("/session/<id>")
 def get_session(id="<id>"):
     return "Session"
+@weight_app.route('/weight', methods=['GET'])
+def get_weight_startup():
+    #time_format yyyymmddhhmmss
+    currenttime = strftime("%Y%m%d%H%M%S", gmtime())
+    start_of_day = strftime("%Y%m%d000000", gmtime())
+    from_time = request.args.get('from', default = start_of_day, type = str)
+    to_time = request.args.get('to', default = currenttime, type = str)
+    filter_type = request.args.get('filter', default = '*', type = str)
+    db_name = db #needs assignment
+    get_weight(from_time,to_time,filter_type,db_name)
+    

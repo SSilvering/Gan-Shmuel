@@ -9,8 +9,8 @@ def index():
     return "Hello, World!"
 
 
-@weight_app.route('/health', methods=['GET', 'POST'])
-def health_check(api='<item>'):
+@weight_app.route('/health', methods=['GET'])
+def health_check():
     #a tuple of the all the apis that will be used in the project 
     api_tuple = ("index","batch-weight","unknown","item","session","post","weight")
     for item in api_tuple:

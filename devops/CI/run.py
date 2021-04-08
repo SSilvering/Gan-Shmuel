@@ -54,7 +54,7 @@ def up_container(branch):
         try:
             process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
             output, error = process.communicate()
-            print('test OK')
+            print('test OK_1')
         except Exception() as e:
             print(error)
             return False

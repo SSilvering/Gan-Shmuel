@@ -25,8 +25,8 @@ def health_check():
     return f"APP status is {req.status_code}"
     
 
-@weight_app.route("/session")
-@weight_app.route("/session/<id>")
+@weight_app.route('/session')
+@weight_app.route('/session/<id>')
 def get_session(id="<id>"):
     return "Session"
 @weight_app.route('/weight', methods=['GET'])
@@ -37,5 +37,6 @@ def get_weight_startup():
     from_time = request.args.get('from', default = start_of_day, type = str)
     to_time = request.args.get('to', default = currenttime, type = str)
     filter_type = request.args.get('filter', default = '*', type = str)
-    db_name = "weight_testing_db" #needs assignment
-    return get_weight(from_time,to_time,filter_type,db_name)
+    db_name = "my_sql_weight" #needs assignment
+    #return get_weight(from_time,to_time,filter_type,db_name)
+    return "Hello from GET/weight!"

@@ -29,9 +29,9 @@ def get_weight(from_time,to_time,filter_type,db_name):
     if filter_type=="in" or filter_type=="out":
         sql_string+=" AND direction='%s'"
     mycursor.execute(sql_string)
-    myresults_1 = mycursor.fetchall()
-    #is it possible? myresults_1 = mycursor.execute(sql_string).fetchall()
-    for result in myresults_1:
+    myresults = mycursor.fetchall()
+    #is it possible? myresults = mycursor.execute(sql_string).fetchall()
+    for result in myresults:
         id = result
         mycursor.execute("SELECT bruto FROM sessions WHERE id='%d'" % result)
         bruto = mycursor.fetchone()
@@ -44,7 +44,5 @@ def get_weight(from_time,to_time,filter_type,db_name):
         mycursor.execute("SELECT containers_id FROM containers_has_sessions WHERE sessions_id='%s'" % result)
         container = mycursor.fetchone()
         session_list.append( session(id, filter_type, bruto, neto, produce, container) )
-
-    #JSON_array = execute_query(get_weight_connection, get_weight_query)
 
     return "{ \"id\": <id>, \"direction\": in/out/none, \"bruto\": <int>, //in kg \"neto\": <int> or \"na\", \"produce\": <str>, \"container\": <str> }"

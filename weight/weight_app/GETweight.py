@@ -20,7 +20,7 @@ class session:
 def GETweight(from_time,to_time,filter_type,db_name):
     #time_format yyyymmddhhmmss
     mydb = mysql.connector.connect(
-        host="mysql_weight",
+        host="db",
         user="root",
         password="123",
         database=db_name

@@ -24,6 +24,7 @@ class Rate(db.Model):
     id = Column(Integer, primary_key=True)
 
     product_name = Column(String(50))
+    __table_args__ = (UniqueConstraint('product_name', 'scope'),)
     rate = Column(Integer)
     scope = Column(Integer, ForeignKey('provider.id'))
 

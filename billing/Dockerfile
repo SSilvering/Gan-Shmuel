@@ -1,17 +1,16 @@
-FROM python:3.6-slim
+FROM python:3.6
 
 WORKDIR /app
 
+RUN pip install PyMySQL
+
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
-ENV PORT=8080
+RUN pip install -r requirements.txt
+ENV PORT=5000
 ENV HOST=0.0.0.0
+
 
 COPY . .
 
-ENTRYPOINT ["python"]
-
-CMD ["run.py"]
-
-
+CMD ["python", "run.py"]

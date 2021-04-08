@@ -12,25 +12,24 @@ class Provider(db.Model):
 
     name = Column(String(50), unique=True)
 
-    trucks = relationship("Truck", backref="provider")
-    rates = relationship("Rate", backref="provider")
+    truck = relationship("Truck", backref="provider")
+    rate = relationship("Rate", backref="provider")
 
     def __repr__(self):
-        return f'PROVIDER id: {self.id}\nname: {self.name}\nrates: {self.rates}'
+        return f'PROVIDER id: {self.id}\nname: {self.name}\nrates: {self.rate}'
 
 
 class Rate(db.Model):
     __tablename__ = 'rate'
-    __table_args__ = (UniqueConstraint('product_name', 'scope'),)
     id = Column(Integer, primary_key=True)
-    
+
     product_name = Column(String(50))
     rate = Column(Integer)
     scope = Column(Integer, ForeignKey('provider.id'))
-     
 
     def __repr__(self):
         return f'RATE product_name: {self.product_name} rate: {self.rate} scope: {self.scope}'
+
 
 class Truck(db.Model):
     __tablename__ = 'truck'
@@ -43,7 +42,7 @@ class Truck(db.Model):
     provider_id = Column(Integer, ForeignKey('provider.id'))
 
     def __repr__(self):
-        return f'truck_id: {self.track_id} belongs_to: {self.provider_id}'
+        return f'truck_id: {self.truck_id} belongs_to: {self.provider_id}'
 
 
 class HealthCheck(db.Model):

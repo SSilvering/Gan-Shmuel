@@ -1,6 +1,6 @@
 from sqlalchemy import inspect
 from app.server.db.models import *
-#from app.server.db.helper import helper
+from sqlalchemy.exc import IntegrityError
 
 
 class DbHelper:
@@ -24,14 +24,17 @@ class DbHelper:
     def get_one(model, **kwargs):
         return model.query.filter_by(**kwargs).first()
 
-    def get_provider_id(self, provider_name):
-	    return self.get_one(Provider, name=provider_name).__dict__.get('id')
-
     def add_instance(self, model, **kwargs):
-        instance = model(**kwargs)
-        self.db.session.add(instance)
-        self.commit_changes()
-        return instance
+        try:
+            instance = model(**kwargs)
+            self.db.session.add(instance)
+            self.commit_changes()
+            return instance
+
+        except IntegrityError:
+            """IntegrityError will raise when trying to add an 
+            item with a unique constrain that already exists."""
+            return False
 
     def commit_changes(self):
         self.db.session.commit()

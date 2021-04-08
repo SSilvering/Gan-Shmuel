@@ -1,0 +1,34 @@
+version: '3'
+
+volumes:
+  mysql-data:
+    driver: local
+
+services:
+  app:
+    image: billing
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: .
+
+    hostname: app
+    expose:
+      - "5555"
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+
+  db:
+    image: mysql:5.7.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=flask
+      - MYSQL_PASSWORD=flask
+    volumes:
+      - mysql-data:/var/lib/mysql
+    hostname: db

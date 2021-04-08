@@ -1,17 +1,15 @@
-FROM python:alpine
+FROM python:3.6
+
+RUN mkdir /app
 
 WORKDIR /app
 
+RUN pip install PyMySQL
+
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
-ENV PORT=8080
-ENV HOST=0.0.0.0
+RUN pip install -r requirements.txt
 
 COPY . .
 
-ENTRYPOINT ["python"]
-
-CMD ["run.py"]
-
-
+CMD ["python", "run.py"]

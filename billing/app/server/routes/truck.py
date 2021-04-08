@@ -7,7 +7,7 @@ from app.server.db.helper import helper
 truck_blueprint = Blueprint('truck_blueprint', __name__)
 
 
-@truck_blueprint.route("/truck", methods=['POST', 'PUT'])
+@truck_blueprint.route("/truck", methods=['POST', 'PUT', 'GET'])
 def truck():
     if request.method == 'POST':
         args = request.args
@@ -20,4 +20,7 @@ def truck():
 
     elif request.method == 'PUT':
         pass
+        
+    elif request.method == 'GET':
+		pass
 

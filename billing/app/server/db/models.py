@@ -2,7 +2,7 @@
 from .extensions import db
 
 # ------- 3rd party imports -------
-from sqlalchemy import Integer, ForeignKey, String, Column
+from sqlalchemy import Integer, ForeignKey, String, Column, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 
@@ -12,37 +12,38 @@ class Provider(db.Model):
 
     name = Column(String(16), unique=True)
 
-    rates = relationship("Rate", backref="provider")
     trucks = relationship("Truck", backref="provider")
+    scope = relationship("Rate", backref="provider")
 
     def __repr__(self):
-        return f'PROVIDER id: {self.id}\nname: {self.name}\nrates: {self.rates}'
+        return f'PROVIDER id: {self.id}\nname: {self.name}\n'#rates: {self.rates}'
 
 
 class Rate(db.Model):
     __tablename__ = 'rate'
+    __table_args__ = (UniqueConstraint('product_name', 'scope'),)
     id = Column(Integer, primary_key=True)
-
-    product_id = Column(String(50))
+    
+    product_name = Column(String(50))
     rate = Column(Integer)
-    scope = Column(String(50))
-
-    provider_id = Column(Integer, ForeignKey('provider.id'))
+    scope = Column(Integer, ForeignKey('provider_id'))
+     
 
     def __repr__(self):
-        return f'RATE prod id: {self.id} rate: {self.rate} scope: {self.scope}'
-
+        return f'RATE product_name: {self.product_name} rate: {self.rate} scope: {self.scope}'
 
 class Truck(db.Model):
     __tablename__ = 'truck'
     id = Column(Integer, primary_key=True)
 
-    truck_id = Column(String(50))
+    truck_id = Column(String(50), unique=True)
+    weight = Column(Float)
+    unit = Column(String(50))
 
     provider_id = Column(Integer, ForeignKey('provider.id'))
 
     def __repr__(self):
-        return f'provider: {self.provider_id}'
+        return f'truck_id: {self.track_id} belongs_to: {self.provider_id}'
 
 
 class HealthCheck(db.Model):

@@ -3,7 +3,7 @@ from weight_app import weight_app, requests
 from time import gmtime, strftime
 from flask import request
 import mysql.connector
-from get_weight import get_weight
+#from get_weight import get_weight
 
 @weight_app.route('/')
 @weight_app.route('/index')

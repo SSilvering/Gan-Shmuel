@@ -58,8 +58,7 @@ def up_container(branch):
             print(error)
             return False
     return True
-    
 
-
+###
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=os.getenv('PORT'))

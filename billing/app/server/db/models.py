@@ -10,13 +10,13 @@ class Provider(db.Model):
     __tablename__ = 'provider'
     id = Column(Integer, primary_key=True)
 
-    name = Column(String(16), unique=True)
+    name = Column(String(50), unique=True)
 
     trucks = relationship("Truck", backref="provider")
-    scope = relationship("Rate", backref="provider")
+    rates = relationship("Rate", backref="provider")
 
     def __repr__(self):
-        return f'PROVIDER id: {self.id}\nname: {self.name}\n'#rates: {self.rates}'
+        return f'PROVIDER id: {self.id}\nname: {self.name}\nrates: {self.rates}'
 
 
 class Rate(db.Model):
@@ -26,7 +26,7 @@ class Rate(db.Model):
     
     product_name = Column(String(50))
     rate = Column(Integer)
-    scope = Column(Integer, ForeignKey('provider_id'))
+    scope = Column(Integer, ForeignKey('provider.id'))
      
 
     def __repr__(self):

@@ -2,7 +2,7 @@
 import os
 from flask import Flask, request, json, Response
 from git import Repo
-
+import subprocess
 
 
 branches = ['billing', 'weight', 'devops']
@@ -22,11 +22,10 @@ def hook():
         print(data)
 
         if check_push(data):
-            # repo = Repo(current_app.config.get('REPO_PATH'))
-            repo = Repo('https://github.com/SSilvering/Gan-Shmuel.git') ## CHANGE IT        
-            origin = repo.remotes.origin
-            origin.pull('--rebase')
-            return Response(status=200)
+            if up_container(branch):
+                return Response(status=200)
+
+        return Response(status=500)
 
 
 @app.route('/health', methods=['GET'])
@@ -41,6 +40,22 @@ def check_push(data):
         return True
     else:
         return False
+
+
+def up_container(branch):
+
+    bashCommands = [f'chroot /host', 'cd /home/ec2-user/Gan-Shmuel/{branch}', f'git checkout {branch}',
+                 'git pull --rebase', 'docker-compose up --build --force-recreate']
+
+    for command in bashCommands:
+        try:
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            output, error = process.communicate()
+        except Exception() as e:
+            print(error)
+            return False
+    return True
+    
 
 
 if __name__ == '__main__':

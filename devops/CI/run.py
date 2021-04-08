@@ -24,7 +24,6 @@ def hook():
             if up_container(branch):
                 return Response(status=200)
         
-        branch = ''
         return Response(status=500)
 
 
@@ -35,6 +34,7 @@ def health():
 
 
 def check_push(data):
+    global branch
     branch = data['ref'].split('/')[2]
     if branch in branches:
         return True
@@ -43,8 +43,8 @@ def check_push(data):
 
 
 def up_container(branch):
-
-    bashCommands = ['chroot /host', 
+    #'chroot /host'
+    bashCommands = [ 
                     f'cd /home/ec2-user/Gan-Shmuel/{branch}', 
                     f'git checkout {branch}',
                     'git pull --rebase', 
@@ -54,6 +54,7 @@ def up_container(branch):
         try:
             process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
             output, error = process.communicate()
+            print('test OK_2')
         except Exception() as e:
             print(error)
             return False

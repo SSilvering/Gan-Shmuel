@@ -8,9 +8,7 @@ services:
   app:
     image: billing
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: .
+    build: .
 
     hostname: app
     expose:

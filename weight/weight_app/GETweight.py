@@ -20,13 +20,13 @@ class session:
 def GETweight(from_time,to_time,filter_type,db_name):
     #time_format yyyymmddhhmmss
     mydb = mysql.connector.connect(host="db", user="root", password="123", database=db_name)
-    session_list =[]
     sql_string = "SELECT id FROM sessions WHERE date BETWEEN %d AND %d;" % (from_time,to_time)
     if filter_type=="in" or filter_type=="out":
         sql_string+=" AND direction='%s'"
     mycursor = mydb.cursor()
     mycursor.execute(sql_string)
     myresults = mycursor.fetchall()
+    session_list =[]
     for result in myresults:
         id = result
         mycursor.execute("SELECT bruto FROM sessions WHERE id='%d';" % result)

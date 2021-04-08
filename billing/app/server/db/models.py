@@ -22,9 +22,9 @@ class Provider(db.Model):
 class Rate(db.Model):
     __tablename__ = 'rate'
     __table_args__ = (UniqueConstraint('product_name', 'scope'),)
-    id = Column(Integer, primary_key=True)
+    # id = Column(Integer, primary_key=True)
     
-    product_name = Column(String(50))
+    product_name = Column(String(50),  primary_key=True)
     rate = Column(Integer)
     scope = Column(Integer, ForeignKey('provider.id'))
      

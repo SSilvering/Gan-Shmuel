@@ -19,3 +19,6 @@ services:
     
   app:
     build: ./weight
+    depends_on:
+      db:
+        condition: service_healthy

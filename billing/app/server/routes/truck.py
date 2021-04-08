@@ -28,6 +28,12 @@ def truck():
 
         elif not truck_id:
             return 'Please provide a valid truck ID'
+            
+    elif request.method == 'PUT':
+        pass
+        
+    elif request.method == 'GET':
+	    pass
 
 
 @truck_blueprint.route("/test")
@@ -43,5 +49,4 @@ def test():
     truck1 = helper.add_instance(Truck,
                                  truck_id='1234',
                                  provider_id=provider1.id)
-
     return 'Hello!'

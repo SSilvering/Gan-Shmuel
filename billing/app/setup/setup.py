@@ -1,5 +1,6 @@
 # ------- 3rd party imports -------
 from flask import Flask
+import pymysql
 
 # ------- local imports -------
 from app.server.routes.health import health_blueprint

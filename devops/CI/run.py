@@ -1,8 +1,11 @@
 #!venv/bin/python3
 import os
 from flask import Flask, request, json, jsonify, Response
-from git import Repo
+import subprocess
 
+
+branches = ['billing', 'weight', 'devops']
+branch = ''
 app = Flask(__name__)
 
 
@@ -17,18 +20,45 @@ def hook():
         data = json.dumps(request.json)
         print(data)
 
-
-
-        # repo = Repo(current_app.config.get('REPO_PATH'))  
-        # origin = repo.remotes.origin
-        # origin.pull('--rebase')
-        return jsonify({}), 200
+        if check_push(data):
+            if up_container(branch):
+                return Response(status=200)
+        
+        branch = ''
+        return Response(status=500)
 
 
 @app.route('/health', methods=['GET'])
 def health():
     print("Health Check")
     return Response(status=200)
+
+
+def check_push(data):
+    branch = data['ref'].split('/')[2]
+    if branch in branches:
+        return True
+    else:
+        return False
+
+
+def up_container(branch):
+
+    bashCommands = ['chroot /host', 
+                    f'cd /home/ec2-user/Gan-Shmuel/{branch}', 
+                    f'git checkout {branch}',
+                    'git pull --rebase', 
+                    'docker-compose up --build --force-recreate']
+
+    for command in bashCommands:
+        try:
+            process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+            output, error = process.communicate()
+        except Exception() as e:
+            print(error)
+            return False
+    return True
+    
 
 
 if __name__ == '__main__':

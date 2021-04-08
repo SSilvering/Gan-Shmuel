@@ -1,6 +1,6 @@
 #!venv/bin/python3
 import os
-from flask import Flask, request, json, Response
+from flask import Flask, request, json, jsonify, Response
 from git import Repo
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'test home'
+    return Response(status=403)
 
 
 @app.route('/webhook', methods=['POST'])
@@ -19,11 +19,10 @@ def hook():
 
 
 
-        # repo = Repo(current_app.config.get('REPO_PATH'))
-        repo = Repo('https://github.com/SSilvering/Gan-Shmuel.git') ## CHANGE IT        
-        origin = repo.remotes.origin
-        origin.pull('--rebase')
-        return Response(status=200)
+        # repo = Repo(current_app.config.get('REPO_PATH'))  
+        # origin = repo.remotes.origin
+        # origin.pull('--rebase')
+        return jsonify({}), 200
 
 
 @app.route('/health', methods=['GET'])

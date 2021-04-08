@@ -22,5 +22,5 @@ def truck():
         pass
         
     elif request.method == 'GET':
-		pass
+	    pass
 

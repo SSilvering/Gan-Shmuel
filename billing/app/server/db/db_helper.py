@@ -24,8 +24,8 @@ class DbHelper:
     def get_one(model, **kwargs):
         return model.query.filter_by(**kwargs).first()
 
-    def get_provider_id(self, provider_name):
-	    return self.get_one(Provider, name=provider_name).__dict__.get('id')
+#    def get_provider_id(self, provider_name):
+#	    return self.get_one(Provider, name=provider_name).__dict__.get('id')
 
     def add_instance(self, model, **kwargs):
         instance = model(**kwargs)

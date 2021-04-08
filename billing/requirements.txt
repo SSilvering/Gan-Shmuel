@@ -1,7 +1,7 @@
 flask~=1.1.2
 requests
 SQLAlchemy~=1.4.6
-flask_sqlalchemy
+flask-sqlalchemy
 openpyxl
 pymysql
 #mysql-connector-python

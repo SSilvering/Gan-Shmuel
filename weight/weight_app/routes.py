@@ -5,6 +5,7 @@ from flask import request
 import mysql.connector
 from . import weight_app
 from .GETweight import GETweight
+from get_item import get_sql
 
 @weight_app.route('/')
 @weight_app.route('/index')
@@ -40,3 +41,17 @@ def GETweight_startup():
     db_name = "weight_testing_db"
     return GETweight(from_time,to_time,filter_type,db_name)
     #return "Hello from GET/weight!"
+#=======================
+#=======================
+@weight_app.route('/item')
+@weight_app.route('/item/<id>')
+def get_item(id):
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+
+    if not from_time:
+        #do something
+
+
+    get_sql()
+    return "hello from my item"

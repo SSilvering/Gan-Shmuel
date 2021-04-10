@@ -1,8 +1,9 @@
-
-from weight_app import weight_app, requests
+from weight_app import weight_app, requests, POSTweight
 from time import gmtime, strftime
 from flask import request
 import mysql.connector
+from . import weight_app
+from .POSTweight import POSTweight
 #from get_weight import get_weight
 
 @weight_app.route('/')
@@ -23,20 +24,18 @@ def health_check():
             res = f"APP Status is {req.status_code}"
             return res
     return f"APP status is {req.status_code}"
-    
 
-@weight_app.route("/session")
-@weight_app.route("/session/<id>")
-def get_session(id="<id>"):
-    return "Session"
-@weight_app.route('/weight', methods=['GET'])
-def get_weight_startup():
-    #time_format yyyymmddhhmmss
-    currenttime = strftime("%Y%m%d%H%M%S", gmtime())
-    start_of_day = strftime("%Y%m%d000000", gmtime())
-    from_time = request.args.get('from', default = start_of_day, type = str)
-    to_time = request.args.get('to', default = currenttime, type = str)
-    filter_type = request.args.get('filter', default = '*', type = str)
-    db_name = db #needs assignment
-    get_weight(from_time,to_time,filter_type,db_name)
+
+@weight_app.route('/weight', methods=['POST'])
+def post_weight():
+    direction = request.args.get('direction')
+    truck = request.args.get('truck', "na")
+    containers = request.args.get('containers', None)
+    weight = request.args.get('weight', None)
+    weight_type = request.args.get('unit')
+    force = request.args.get('force', None)
+    produce = request.args.get('produce', None)
+
+    return POSTweight(direction, truck, containers, weight, weight_type, force, produce)
+    
     

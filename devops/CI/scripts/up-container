@@ -1,0 +1,42 @@
+#!/bin/sh
+
+BRANCH=$1
+
+echo -e "\e[1;31m\t Trying to building up service\e[0m"
+
+echo "$BRANCH"
+
+if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "devops" ] || [ "$BRANCH" = "master" ]
+    then
+        rm -rf "/home/ec2-user/tmp/build_$BRANCH/"
+        echo -e "\e[1;31m\t Start Building up service\e[0m"
+
+        echo -e "\e[1;36m[+] Setting up Job Control\e[0m"        
+        set -m && \
+
+        echo -e "\e[1;36m[+] Making Temp dir for branch\e[0m" && \
+        mkdir -p "/home/ec2-user/tmp/build_$BRANCH" && \
+
+        echo -e "\e[1;36m[+] Moving into tmp folder\e[0m" && \
+        cd "/home/ec2-user/tmp/build_$BRANCH" && \
+
+        echo -e "\e[1;36m[+] Cloning last version of the project from git\e[0m" && \
+        git clone "https://github.com/SSilvering/Gan-Shmuel.git" && \
+
+        echo -e "\e[1;36m[+] Moving into $BRANCH folder\e[0m" && \
+        cd "/home/ec2-user/tmp/build_$BRANCH/Gan-Shmuel/$BRANCH" && \
+
+        echo -e "\e[1;36m[+] Chechout for $BRANCH branch\e[0m" && \
+        git checkout "$BRANCH" && \
+
+        echo -e "\e[1;36m[+] Building up $BRANCH service\e[0m" && \
+        docker-compose up -d --build --force-recreate && \
+
+        echo -e "\e[1;36m[+] Removing folder\e[0m" && \
+        rm -rf "/home/ec2-user/tmp/build_$BRANCH/" && \
+
+        echo -e "\e[1;36m[+] Exiting chroot\e[0m" && \
+        exit
+    else
+        echo -e "Problem with executing script\n"
+    fi    

@@ -2,7 +2,9 @@
 import os
 from flask import Flask, request, json, Response
 import subprocess
+# import logging
 
+# logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 branches = ['billing', 'weight', 'devops']
 app = Flask(__name__)
@@ -38,29 +40,22 @@ def health():
 
 
 def up_container(branch):
-    bashCommands = [ "chroot /host",
-                    f'mkdir -p /home/ec2-user/tmp/build_{branch}',
-                    f'cd /home/ec2-user/tmp/build_{branch}',
-                    'git clone https://github.com/SSilvering/Gan-Shmuel.git',
-                    f'cd /home/ec2-user/tmp/build_{branch}/Gan-Shmuel/{branch}',
-                    f'git checkout {branch}',
-                    'docker-compose up --build --force-recreate']
 
-
-    command = ' && '.join(x for x in bashCommands)
+    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/CI/scripts/up-container {branch}"
 
     try:
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
-        proc_stdout = process.communicate()[0].strip()
-        print(proc_stdout)
-        print('Command executed successfully')
+        p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
+        p_status = p.wait()
+        (output, err) = p.communicate()
+        
+        print("Command output : ", output)
+        print("Command exit status/return code : ", p_status)
 
     except Exception() as e:
-        print(type(e))
+        print("catch exception type: ", type(e))
+
         return False
     return True
 
-###
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=os.getenv('PORT'))
-    # app.run(host="0.0.0.0", port=80, debug=True)
+    app.run(host="0.0.0.0", port=os.getenv('PORT'), debug=os.getenv('DEBUG'))

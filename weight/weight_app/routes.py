@@ -3,7 +3,11 @@ from weight_app import weight_app, requests
 from time import gmtime, strftime
 from flask import request
 import mysql.connector
-from get_weight import get_weight
+from . import weight_app
+from .db_module import DB_Module
+import json
+
+
 
 @weight_app.route('/')
 @weight_app.route('/index')
@@ -28,7 +32,20 @@ def health_check():
 @weight_app.route("/session")
 @weight_app.route("/session/<id>")
 def get_session(id="<id>"):
-    return "Session"
+    if id is not None:
+        select_query = f"SELECT id, trucks_id, bruto, neto FROM sessions where trucks_id={id}"
+        tags = ('id', 'trucks_id', 'bruto', 'neto')
+        db = DB_Module ()
+        data = db.fetch_new_data(select_query)
+        print(type(data))
+        session = dict()
+        for ind in range(0, len(data)):
+            session[tags[ind]] = data[ind]
+        sessio_jason = json.dumps(data)
+        return sessio_jason
+    return "provide a truck ID"
+
+
 @weight_app.route('/weight', methods=['GET'])
 def get_weight_startup():
     #time_format yyyymmddhhmmss
@@ -39,4 +56,5 @@ def get_weight_startup():
     filter_type = request.args.get('filter', default = '*', type = str)
     db_name = db #needs assignment
     get_weight(from_time,to_time,filter_type,db_name)
+
     

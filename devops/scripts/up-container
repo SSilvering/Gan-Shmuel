@@ -6,7 +6,7 @@ echo -e "\e[1;31m\t Trying to building up service\e[0m"
 
 echo "$BRANCH"
 
-if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "devops" ] || [ "$BRANCH" = "master" ]
+if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "master" ]
     then
         rm -rf "/home/ec2-user/tmp/build_$BRANCH/"
         echo -e "\e[1;31m\t Start Building up service\e[0m"

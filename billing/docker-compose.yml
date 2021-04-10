@@ -19,6 +19,8 @@ services:
       - db
     ports:
       - "8081:5000"
+    volumes:
+      - ./app/xlsx:/in
 
   db:
 #for mysql:latest add cryptograpy to requirements

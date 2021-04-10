@@ -30,7 +30,7 @@ if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "devop
         git checkout "$BRANCH" && \
 
         echo -e "\e[1;36m[+] Building up $BRANCH service\e[0m" && \
-        docker-compose up -d --build --force-recreate && \
+        docker-compose up -d --build --force-recreate
 
         echo -e "\e[1;36m[+] Removing folder\e[0m" && \
         rm -rf "/home/ec2-user/tmp/build_$BRANCH/" && \

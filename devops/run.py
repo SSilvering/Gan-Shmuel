@@ -41,7 +41,7 @@ def health():
 
 def up_container(branch):
 
-    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/CI/scripts/up-container {branch}"
+    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch}"
 
     try:
         p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)

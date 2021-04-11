@@ -146,7 +146,7 @@ def createSeasion(type, truck, containers, weight, unit, force, produce):
         lastid = sql_cur.lastrowid
         return jsonify({'id': lastid, 'truck': truck, 'bruto': weight})
     elif type == "out":
-        return jsonify({'id': lastid, 'truck': truck, 'bruto': weight, 'truckTara': truck_weight, 'neto': neto})
+        return jsonify({'id': lastid, 'truck': truck, 'bruto': weight, 'truckTara': bruto - neto, 'neto': neto})
 
 def POSTweight(direction, truck, containers, weight, weight_unit, force, produce):
     checkSyntax(direction, weight_unit, containers)

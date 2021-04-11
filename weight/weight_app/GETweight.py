@@ -29,14 +29,19 @@ def GETweight(from_time,to_time,filter_type,db_name):
     session_list =[]
     for result in myresults:
         id = result
+        print("id = %s" % id)
         mycursor.execute("SELECT bruto FROM sessions WHERE id='%d';" % result)
         bruto = mycursor.fetchone()
+        print("bruto = %s" % bruto)
         mycursor.execute("SELECT neto FROM sessions WHERE id='%d';" % result)
         neto = mycursor.fetchone()
+        print("neto = %s" % neto)
         mycursor.execute("SELECT products_id FROM sessions WHERE id='%d';" % result)
         product_id = mycursor.fetchone()
+        print("product_id = %s" % product_id)
         mycursor.execute("SELECT product_name FROM products WHERE id='%d';" % product_id)
         produce = mycursor.fetchone()
+        print("produce = %s" % produce)
         #This returns an empty set!
         ##mycursor.execute("SELECT containers_id FROM containers_has_sessions WHERE sessions_id='%s';" % result)
         ##container = mycursor.fetchone()

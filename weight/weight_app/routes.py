@@ -44,5 +44,5 @@ def GETweight_startup():
     print("filter_type = %s" % filter_type)
     db_name = "weight_testing_db"
     print("db_name = %s" % db_name)
-    #return GETweight(from_time,to_time,filter_type,db_name)
+    return GETweight(from_time,to_time,filter_type,db_name)
     #return "Hello from GET/weight!"

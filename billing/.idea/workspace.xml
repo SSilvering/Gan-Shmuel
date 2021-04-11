@@ -19,13 +19,21 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac104236-d163-4544-ae75-6689422d5591" name="Default Changelist" comment="">
+    <list default="true" id="ac104236-d163-4544-ae75-6689422d5591" name="Default Changelist" comment="Merge branch 'billing' of https://github.com/SSilvering/Gan-Shmuel into billing&#10;&#10;# Conflicts:&#10;#&#9;billing/app/server/routes/provider.py&#10;#&#9;billing/app/server/routes/rates.py&#10;#&#9;billing/app/server/routes/truck.py&#10;#&#9;billing/app/setup/billing.db&#10;#&#9;billing/app/setup/settings.py">
+      <change afterPath="$PROJECT_DIR$/app/server/routes/truckGet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/server/routes/truckPut.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/server/db/db_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/db/db_helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/server/db/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/db/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/server/routes/bill.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/bill.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/provider.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/provider.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/rates.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/rates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/server/routes/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/truck.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/truck.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/setup/billing.db" beforeDir="false" afterPath="$PROJECT_DIR$/app/setup/billing.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/setup/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/setup/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/tests/api_testing/test_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/tests/api_testing/test_api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/play.py" beforeDir="false" afterPath="$PROJECT_DIR$/play.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/setup/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/setup/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/rates.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/xlsx/rates.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +137,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1618051568218</updated>
-      <workItem from="1618051570524" duration="2958000" />
+      <workItem from="1618051570524" duration="4372000" />
+      <workItem from="1618145949005" duration="154000" />
     </task>
     <servers />
   </component>
@@ -146,28 +155,49 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Merge branch 'billing' of https://github.com/SSilvering/Gan-Shmuel into billing&#10;&#10;# Conflicts:&#10;#&#9;billing/app/server/routes/provider.py&#10;#&#9;billing/app/server/routes/rates.py&#10;#&#9;billing/app/server/routes/truck.py&#10;#&#9;billing/app/setup/billing.db&#10;#&#9;billing/app/setup/settings.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'billing' of https://github.com/SSilvering/Gan-Shmuel into billing&#10;&#10;# Conflicts:&#10;#&#9;billing/app/server/routes/provider.py&#10;#&#9;billing/app/server/routes/rates.py&#10;#&#9;billing/app/server/routes/truck.py&#10;#&#9;billing/app/setup/billing.db&#10;#&#9;billing/app/setup/settings.py" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1876" height="300" key="GridCell.Tab.0.bottom" timestamp="1618056608442">
+    <state x="100" y="100" width="1720" height="880" key="DiffContextDialog" timestamp="1618143095027">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="300" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618056608442" />
-    <state width="1876" height="300" key="GridCell.Tab.0.center" timestamp="1618056608441">
+    <state x="100" y="100" width="1720" height="880" key="DiffContextDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095027" />
+    <state width="1876" height="355" key="GridCell.Tab.0.bottom" timestamp="1618143095010">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="300" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618056608441" />
-    <state width="1876" height="300" key="GridCell.Tab.0.left" timestamp="1618056608440">
+    <state width="1876" height="355" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095010" />
+    <state width="1876" height="355" key="GridCell.Tab.0.center" timestamp="1618143095007">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="300" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618056608440" />
-    <state width="1876" height="300" key="GridCell.Tab.0.right" timestamp="1618056608442">
+    <state width="1876" height="355" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095007" />
+    <state width="1876" height="355" key="GridCell.Tab.0.left" timestamp="1618143095006">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="300" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618056608442" />
+    <state width="1876" height="355" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095006" />
+    <state width="1876" height="355" key="GridCell.Tab.0.right" timestamp="1618143095008">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1876" height="355" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095008" />
+    <state x="75" y="49" width="1843" height="1031" key="MergeDialog" timestamp="1618142681179">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="75" y="49" width="1843" height="1031" key="MergeDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618142681179" />
+    <state x="343" y="223" width="1004" height="586" key="MultipleFileMergeDialog" timestamp="1618142682230">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="343" y="223" width="1004" height="586" key="MultipleFileMergeDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618142682230" />
     <state x="469" y="179" key="SettingsEditor" timestamp="1618051720072">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="469" y="179" key="SettingsEditor/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618051720072" />
+    <state x="182" y="205" width="1210" height="692" key="Vcs.Multiple.Commit.Info.Dialog.Key" timestamp="1618142629355">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="182" y="205" width="1210" height="692" key="Vcs.Multiple.Commit.Info.Dialog.Key/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618142629355" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/billing$run.coverage" NAME="run Coverage Results" MODIFIED="1618052506349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

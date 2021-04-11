@@ -9,4 +9,4 @@ bill_blueprint = Blueprint('bill_blueprint', __name__)
 
 @bill_blueprint.route("/bill")
 def bill():
-    return '', 200
+    return 'not implemented yet', 200

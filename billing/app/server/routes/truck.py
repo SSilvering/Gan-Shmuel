@@ -33,7 +33,7 @@ def truck():
 @truck_blueprint.route("/test")
 def test():
     provider1 = helper.add_instance(Provider,
-                                    name='tomer1')
+                                    name=tomer)
 
     rate1 = helper.add_instance(Rate,
                                 product_name='cucumba',

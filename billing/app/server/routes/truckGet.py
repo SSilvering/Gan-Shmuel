@@ -34,7 +34,7 @@ def truckGet(id):
 		if not from_arg:
 			from_arg = from_default
 		else:
-			if len(s) != 14:
+			if len(from_arg) != 14:
 				return "wrong datetime value"
 			try:
 				from_arg = datetime(from_arg[0:4], from_arg[4:6], from_arg[6:8], from_arg[8:10], from_arg[10:12], from_arg[12:14])
@@ -45,7 +45,7 @@ def truckGet(id):
 		if not to_arg:
 			to_arg = datetime.now()
 		else:
-			if len(s) != 14:
+			if len(to_arg) != 14:
 				return "wrong datetime value"
 			try:
 				to_arg = datetime(to_arg[0:4], to_arg[4:6], to_arg[6:8], to_arg[8:10], to_arg[10:12], to_arg[12:14])

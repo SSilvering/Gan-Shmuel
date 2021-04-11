@@ -45,7 +45,7 @@ def download_rates_to_xml():
                                                            })
         wb.save(os.path.join(output_dir,output_file))
         print(os.getcwd())
-<<<<<<< HEAD
+
         xlsx_file = Path(os.getcwd() + '/app/static/rates.xlsx')
         wb_obj = openpyxl.load_workbook(xlsx_file)
         sheet = wb_obj.active
@@ -70,9 +70,6 @@ def download_rates_to_xml():
 
         print("hello from POST/rates")
         return 'OK', 200
-=======
-        return "Ok", 200
-
 
 
 @rates_blueprint.route("/rates", methods=['POST'])

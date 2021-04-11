@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="8" />
+    <option name="CUSTOM_SCOPE_NAME" value="Project Files" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -20,15 +24,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac104236-d163-4544-ae75-6689422d5591" name="Default Changelist" comment="Merge branch 'billing' of https://github.com/SSilvering/Gan-Shmuel into billing&#10;&#10;# Conflicts:&#10;#&#9;billing/app/server/routes/provider.py&#10;#&#9;billing/app/server/routes/rates.py&#10;#&#9;billing/app/server/routes/truck.py&#10;#&#9;billing/app/setup/billing.db&#10;#&#9;billing/app/setup/settings.py">
-      <change afterPath="$PROJECT_DIR$/app/server/utils/time.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/tests/api_testing/main_test.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/tests/api_testing/test_provider_post_put.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/server/db/extensions.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/db/extensions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/server/routes/bill.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/bill.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/provider.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/provider.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/rates.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/rates.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/truckGet.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/truckGet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/server/routes/truckPut.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/truckPut.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/setup/billing.db" beforeDir="false" afterPath="$PROJECT_DIR$/app/setup/billing.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,11 +57,15 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="org.elm.workspace.PROJECT_DISCOVERY" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python tests.Unittests for test_api.TestApp">
+  <component name="RunManager" selected="Python tests.Unittests for test_api.TestApp.test_add_truck_succeeds">
     <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="billing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -99,6 +103,21 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Unittests for test_api.TestApp.test_add_truck_succeeds" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
+      <module name="billing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/tests/api_testing" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_api.TestApp.test_add_truck_succeeds&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="Unittests in test_api.py" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="billing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -116,9 +135,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests for test_api.TestApp" />
+        <item itemvalue="Python tests.Unittests for test_api.TestApp.test_add_truck_succeeds" />
         <item itemvalue="Python.run" />
         <item itemvalue="Python tests.Unittests in test_api.py" />
+        <item itemvalue="Python tests.Unittests for test_api.TestApp" />
       </list>
     </recent_temporary>
   </component>
@@ -135,6 +155,7 @@
       <workItem from="1618051570524" duration="4372000" />
       <workItem from="1618145949005" duration="154000" />
       <workItem from="1618151629674" duration="1693000" />
+      <workItem from="1618156730352" duration="3014000" />
     </task>
     <servers />
   </component>
@@ -158,36 +179,40 @@
     <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'billing' of https://github.com/SSilvering/Gan-Shmuel into billing&#10;&#10;# Conflicts:&#10;#&#9;billing/app/server/routes/provider.py&#10;#&#9;billing/app/server/routes/rates.py&#10;#&#9;billing/app/server/routes/truck.py&#10;#&#9;billing/app/setup/billing.db&#10;#&#9;billing/app/setup/settings.py" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="708" y="390" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1618157986561">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="708" y="390" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618157986561" />
     <state x="100" y="100" width="1720" height="880" key="DiffContextDialog" timestamp="1618143095027">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="100" y="100" width="1720" height="880" key="DiffContextDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095027" />
-    <state width="1876" height="355" key="GridCell.Tab.0.bottom" timestamp="1618143095010">
+    <state width="1876" height="244" key="GridCell.Tab.0.bottom" timestamp="1618161583440">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="355" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095010" />
-    <state width="1876" height="355" key="GridCell.Tab.0.center" timestamp="1618143095007">
+    <state width="1876" height="244" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583440" />
+    <state width="1876" height="244" key="GridCell.Tab.0.center" timestamp="1618161583436">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="355" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095007" />
-    <state width="1876" height="355" key="GridCell.Tab.0.left" timestamp="1618143095006">
+    <state width="1876" height="244" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583436" />
+    <state width="1876" height="244" key="GridCell.Tab.0.left" timestamp="1618161583435">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="355" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095006" />
-    <state width="1876" height="355" key="GridCell.Tab.0.right" timestamp="1618143095008">
+    <state width="1876" height="244" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583435" />
+    <state width="1876" height="244" key="GridCell.Tab.0.right" timestamp="1618161583439">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="355" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095008" />
-    <state x="66" y="47" width="1614" height="959" key="MergeDialog" timestamp="1618153634686">
-      <screen x="0" y="0" width="1680" height="1050" />
+    <state width="1876" height="244" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583439" />
+    <state x="75" y="49" width="1614" height="959" key="MergeDialog" timestamp="1618156806198">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="66" y="47" width="1614" height="959" key="MergeDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1618153634686" />
-    <state x="75" y="49" width="1843" height="1031" key="MergeDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618142681179" />
-    <state x="300" y="195" width="1288" height="682" key="MultipleFileMergeDialog" timestamp="1618153639020">
-      <screen x="0" y="0" width="1680" height="1050" />
+    <state x="75" y="49" width="1843" height="1031" key="MergeDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618156806198" />
+    <state x="343" y="223" width="1288" height="682" key="MultipleFileMergeDialog" timestamp="1618156806226">
+      <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="300" y="195" width="1288" height="682" key="MultipleFileMergeDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1618153639020" />
-    <state x="343" y="223" width="1004" height="586" key="MultipleFileMergeDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618142682230" />
+    <state x="343" y="223" width="1004" height="586" key="MultipleFileMergeDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618156806226" />
     <state x="469" y="179" key="SettingsEditor" timestamp="1618051720072">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -202,8 +227,9 @@
     <state x="318" y="23" width="1299" height="934" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1618153112923" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/billing$run.coverage" NAME="run Coverage Results" MODIFIED="1618052506349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/billing$Unittests_in_test_api_py.coverage" NAME="Unittests in test_api.py Coverage Results" MODIFIED="1618052470868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
+    <SUITE FILE_PATH="coverage/billing$run.coverage" NAME="run Coverage Results" MODIFIED="1618161574350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/billing$Unittests_in_test_api_py.coverage" NAME="Unittests in test_api.py Coverage Results" MODIFIED="1618161524239" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
+    <SUITE FILE_PATH="coverage/billing$Unittests_for_test_api_TestApp_test_add_truck_succeeds.coverage" NAME="Unittests for test_api.TestApp.test_add_truck_succeeds Coverage Results" MODIFIED="1618161583423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
     <SUITE FILE_PATH="coverage/billing$Unittests_for_test_api_TestApp.coverage" NAME="Unittests for test_api.TestApp Coverage Results" MODIFIED="1618056608423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
   </component>
 </project>

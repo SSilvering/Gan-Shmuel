@@ -1,6 +1,7 @@
 from weight_app import weight_app
 import mysql.connector
 
+
 class DB_Module(object):
     def __init__(self):
         self.db_user = "root"
@@ -23,8 +24,10 @@ class DB_Module(object):
 
         conn = self.getConnection()
         cur = conn.cursor(dictionary=True, buffered=True)
+        #curs = conn.cursor(cur)
         #cur = conn.cursor()
-        cur.execute(SELECT_QUERY)
+        res = cur.execute(SELECT_QUERY)
+        
         for result_row in cur:
             rows_list.append(result_row)
         

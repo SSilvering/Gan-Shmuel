@@ -4,8 +4,15 @@ from flask import Blueprint, request, jsonify
 import openpyxl
 import os
 from pathlib import Path
+
+from openpyxl import Workbook, load_workbook
+from openpyxl.writer.excel import save_virtual_workbook
+
 from app.server.db.helper import helper
 from app.server.db.models import *
+from app.server.utils.time import TimeUtils
+
+XLSX_DIR = '/in/'
 
 # ------- local imports -------
 rates_blueprint = Blueprint('rates_blueprint', __name__)
@@ -30,6 +37,12 @@ def download_rates_to_xml():
             ws.cell(row=real_row_num, column=2).value = row.rate
             ws.cell(row=real_row_num, column=3).value = row.scope
 
+        # wb.save(os.path.join(output_dir, output_file))
+        # print(os.getcwd())
+        #------------------
+        return Response(save_virtual_workbook(wb), headers={'Content-Disposition': 'attachment; filename=rates.xlsx',
+                                                           'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                                                           })
         wb.save(os.path.join(output_dir,output_file))
         print(os.getcwd())
 <<<<<<< HEAD
@@ -92,5 +105,6 @@ def upload_xml_data():
                                 rate=row[1].value,
                                 scope=row[2].value)
 
+        TimeUtils.set_file_last_modified(XLSX_DIR + data, TimeUtils.get_now())
+
     return 'OK\n', 200
->>>>>>> ef131d91c940b9f3da228be80ccad179efc8929a

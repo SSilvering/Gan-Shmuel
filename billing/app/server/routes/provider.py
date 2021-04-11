@@ -6,7 +6,6 @@ from app.server.db.models import *  # import tables
 
 # ------- local imports -------
 provider_blueprint = Blueprint('provider_blueprint', __name__)
-#commet
 
 
 def create_id(name):
@@ -21,30 +20,24 @@ def put_collection(id):
     if new_name is None:
         return 'Bad parameters, expected {"name":"<name>"} or "name=<name>\n"', 400
     found_id = helper.get_one(Provider, id=id)
-    if found_id is None:  # unacceptable parameter
+    if found_id is None:
         return "the <id> sent isn't related to any existing entry on the server\n", 406
     found_id.name = new_name
     helper.commit_changes()
     return "", 200
 
 
-<<<<<<< HEAD
-# curl -i -X PUT -H 'Content-Type: application/json' -d '{"new_name": "test---------<<"}' http://127.0.0.1:5000/provider/10
 
 @provider_blueprint.route("/provider", methods=['POST'])
 def provider():
-    args = request.json  # get arg from post
-    name = args.get("provider")  # get provider name from args
+    args = request.json
+    name = args.get("provider")
     found_name = helper.get_one(Provider, name=name)
-    if found_name:  # if True
-        # print("name: ",name, "allready excit in id:", found_name.id)
+    if found_name:
         return "", 200
-    else:  # name not in Provider table
+    else:
         return create_id(name), 200
-    return "", 200
-=======
-# curl -i -X PUT -H 'Content-Type: application/json' -d '{"name": "test---------<<"}'
-# http://127.0.0.1:5000/provider/10
+
 
 @provider_blueprint.route("/provider", methods=['POST'])
 def provider():
@@ -53,10 +46,7 @@ def provider():
     if name is None:
         return 'Bad parameters, expected {"name":"<name>"}\n', 400
     found_name = helper.get_one(Provider, name=name)
-    if found_name:  # if True
-        # print("name: ",name, "allready excit in id:", found_name.id)
+    if found_name:
         return "Already Exists\n", 400
-    else:  # name not in Provider table
+    else:
         return create_id(name), 200
->>>>>>> ef131d91c940b9f3da228be80ccad179efc8929a
-# curl -i -X POST -H 'Content-Type: application/json' -d '{"provider": "ProviderName"}' http://127.0.0.1:5000/provider

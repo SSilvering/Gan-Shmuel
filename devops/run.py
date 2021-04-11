@@ -6,7 +6,7 @@ import subprocess
 
 # logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
-branches = ['billing', 'weight', 'devops']
+branches = ['billing', 'weight', 'master']
 app = Flask(__name__)
 
 
@@ -35,13 +35,12 @@ def hook():
                     return Response(status=200)
 
         elif data.get("action") == "opened":
-            branch = data.get("pull_request", {}).get("head", {}).get("billing")
-            if data.get("head", {}).get("ref"):
-                print("HI ** 38")
-                branch = data.get("head", {}).get("ref")
+            branch = data.get("pull_request", {}).get("head", {}).get("ref")
+            if branch in branches:                
                 ## TODO: run tests on code, if it pass, approve PR and push to master
                 print(branch)
-
+            ## docker exec /app/testing.sh and see whats returns, if return OK, shuting down container and power it up on production mode (port 8082 or 8084 fit to the branch).
+            ## if it fails, return 1 to flask and annonce the commiter.
     return Response(status=500, headers={"error":branch})
 
 
@@ -53,12 +52,13 @@ def health():
 
 def up_container(branch):
 
-    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch}"
+    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch} > script.out"
 
-    try:
-        p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
-        p_status = p.wait()
+    p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
+
+    try:        
         (output, err) = p.communicate()
+        p_status = p.wait()
         
         print("Command output : ", output)
         print("Command exit status/return code : ", p_status)

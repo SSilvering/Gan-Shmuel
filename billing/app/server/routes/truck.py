@@ -28,18 +28,12 @@ def truck():
 
         elif not truck_id:
             return 'Please provide a valid truck ID'
-            
-    elif request.method == 'PUT':
-        pass
-        
-    elif request.method == 'GET':
-	    pass
 
 
 @truck_blueprint.route("/test")
 def test():
     provider1 = helper.add_instance(Provider,
-                                    name=tomer)
+                                    name='tomer1')
 
     rate1 = helper.add_instance(Rate,
                                 product_name='cucumba',

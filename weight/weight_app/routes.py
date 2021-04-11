@@ -48,6 +48,8 @@ def GETweight_startup():
 
 
 @weight_app.route('/item')
+def get_only_item():
+    return "Hello from Item!"
 @weight_app.route('/item/<id>', methods=['GET'])
 def get_item(id):
     from_time = request.args.get('from')

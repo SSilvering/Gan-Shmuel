@@ -24,13 +24,25 @@ def hook():
         if data.get("repository", {}).get("name") != "Gan-Shmuel":
             return "Ignore commit. Repository diffrent."
         
-        branch = data.get("ref").split("/")[2]
-
-        if branch in branches:
-            if up_container(branch):
-                return Response(status=200)
         
-    return Response(status=500)
+        branch = ''
+        if data.get("ref"):
+
+            branch = data.get("ref").split("/")[2]
+
+            if branch in branches:
+                if up_container(branch):
+                    return Response(status=200)
+
+        elif data.get("action") == "opened":
+            branch = data.get("pull_request", {}).get("head", {}).get("billing")
+            if data.get("head", {}).get("ref"):
+                print("HI ** 38")
+                branch = data.get("head", {}).get("ref")
+                ## TODO: run tests on code, if it pass, approve PR and push to master
+                print(branch)
+
+    return Response(status=500, headers={"error":branch})
 
 
 @app.route('/health', methods=['GET'])

@@ -1,7 +1,7 @@
 import mysql.connector
 
 
-def get_sql(to_time,from_time,id,query):
+def get_sql(to_time,from_time,id):
     try:
         database = mysql.connector.connect(
             host='db',
@@ -14,16 +14,20 @@ def get_sql(to_time,from_time,id,query):
 
     fetcher = database.cursor()
 
-    fetcher.execute(query) #run sql query
+    query = f"SELECT (bruto,neto,id) from sessions WHERE date BETWEEN {from_time} AND {to_time}"
 
-    for lines in fetcher: #iterate through our returned object (data,data,data,data)
-        print(x)
+    fetcher.execute(query) #run sql query
 
     data = {
         "id":id,
-        "tara":to_time,
-        "sessions":from_time
+        "tara":0,
+        "sessions":[]
     }
+
+    for (bruto,neto,id) in fetcher: #iterate through our returned object (data,data,data,data)
+        data["tara"] = float(bruto) - float(neto)
+        data["sessions"].append(id)
+
 
     #close connections
     fetcher.close()

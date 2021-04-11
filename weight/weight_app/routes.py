@@ -58,7 +58,5 @@ def get_item(id):
     if not to_time:
         to_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # print (f'start time: {from_time} end time: {to_time}')
-    query = f"SELECT (bruto,neto,id) from sessions WHERE date BETWEEN {from_time} AND {to_time}"
 
-    return get_sql(to_time,from_time,id,query)
+    return get_sql(to_time,from_time,id)

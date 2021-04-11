@@ -35,19 +35,13 @@ def get_session(id="<id>"):
 @weight_app.route('/weight', methods=['GET'])
 def GETweight_startup():
     currenttime = strftime("%Y%m%d%H%M%S", gmtime())
-    print("currenttime = %s" % currenttime)
     start_of_day = strftime("%Y%m%d000000", gmtime())
-    print("start_of_day = %s" % start_of_day)
     from_time = request.args.get('from', default = start_of_day, type = str)
-    print("from_time = %s" % from_time)
     to_time = request.args.get('to', default = currenttime, type = str)
-    print("to_time = %s" % to_time)
     filter_type = request.args.get('filter', default = '*', type = str)
-    print("filter_type = %s" % filter_type)
     db_name = "weight_testing_db"
-    print("db_name = %s" % db_name)
-    return GETweight(from_time,to_time,filter_type,db_name)
-    #return "Hello from GET/weight!"
+    #return GETweight(from_time,to_time,filter_type,db_name)
+    return "Hello from GET/weight!"
 #=======================
 #=======================
 

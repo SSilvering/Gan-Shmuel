@@ -1,10 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 BRANCH=$1
+COMMIT=$2
 
 echo -e "\e[1;31m\t Trying to building up service\e[0m"
 
 echo "$BRANCH"
+echo "$COMMIT"
 
 if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "master" ]
     then
@@ -27,11 +29,21 @@ if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "maste
         cd "/home/ec2-user/tmp/build_$BRANCH/Gan-Shmuel/$BRANCH" && \
 
         echo -e "\e[1;36m[+] Chechout for $BRANCH branch\e[0m" && \
-        git checkout "$BRANCH" && \
+        git checkout "$BRANCH" "--" && \
 
         echo -e "\e[1;36m[+] Building up $BRANCH service\e[0m" && \
-        docker-compose up -d --build --force-recreate
+        
+        # export TAG="$COMMIT" && \
 
+        # if docker image ls | grep -c "${COMMIT}" gt 0 
+        # then
+        #     docker-compose up -d --force-recreate
+        # else
+        #     docker-compose up -d --build --force-recreate
+        # fi    
+        docker-compose up -d --build --force-recreate && \
+
+        
         echo -e "\e[1;36m[+] Removing folder\e[0m" && \
         rm -rf "/home/ec2-user/tmp/build_$BRANCH/" && \
 

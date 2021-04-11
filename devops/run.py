@@ -29,19 +29,32 @@ def hook():
         if data.get("ref"):
 
             branch = data.get("ref").split("/")[2]
+            commit = data.get("after")
 
             if branch in branches:
-                if up_container(branch):
+                if up_container(branch, commit):
                     return Response(status=200)
 
         elif data.get("action") == "opened":
             branch = data.get("pull_request", {}).get("head", {}).get("ref")
+            commit = data.get("pull_request", {}).get("head", {}).get("sha")
+
             if branch in branches:                
                 ## TODO: run tests on code, if it pass, approve PR and push to master
-                print(branch)
+                if up_container(branch, commit):
+                    return Response(status=200)
+
             ## docker exec /app/testing.sh and see whats returns, if return OK, shuting down container and power it up on production mode (port 8082 or 8084 fit to the branch).
             ## if it fails, return 1 to flask and annonce the commiter.
     return Response(status=500, headers={"error":branch})
+
+
+## if billing push -> up container (staging)
+## elif billing PR -> up container and run docker-compose exec app/test
+## if  docker-compose exec app/test 0 -> turn down container
+## 
+## if pr approve and occurred merge to master -> up container on production port (billing 8082 and weight 8084)
+
 
 
 @app.route('/health', methods=['GET'])
@@ -49,10 +62,9 @@ def health():
     print("Health Check")
     return Response(status=200)
 
+def up_container(branch, commit):
 
-def up_container(branch):
-
-    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch} > script.out"
+    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch} {commit} > script.out"
 
     p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
 

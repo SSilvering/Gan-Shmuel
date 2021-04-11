@@ -18,6 +18,7 @@ services:
         retries: 100
     
   app:
+    image: weight:$IMG_COMMIT
     build: ./weight
     depends_on:
       db:

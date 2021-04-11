@@ -2,7 +2,7 @@
 from weight_app import weight_app, requests, GETweight, POSTweight
 from time import gmtime, strftime
 from datetime import datetime
-from flask import request
+from flask import request, jsonify
 import mysql.connector
 from . import weight_app
 from .GETweight import GETweight
@@ -10,6 +10,7 @@ from .POSTweight import POSTweight
 from .get_item import get_sql
 from .db_module import DB_Module
 import json
+#from weight_app import db1, conn
 
 
 
@@ -49,17 +50,21 @@ def post_weight():
 @weight_app.route('/session/<id>')
 def get_session(id="<id>"):
     if id is not None:
-        #select_query = f"SELECT id, trucks_id, bruto, neto FROM sessions where trucks_id={id}"
-         
-        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.neto, t2.weight FROM sessions t1, trucks t2 WHERE t1.trucks_id = {id} and t1.trucks_id = t2.truckid"
-        tags = ('id', 'trucks_id', 'bruto', 'neto')
+        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.neto, t1.bruto-t1.neto AS 'truckTara', t2.weight FROM sessions t1, \
+            trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         db = DB_Module ()
+        
         data = db.fetch_new_data(select_query)
-        print(type(data))
-        session = dict()
-        for ind in range(0, len(data)):
-            session[tags[ind]] = data[ind]
-        return json.dumps(session)
+        session = []
+        #for ind in range(0, len(data)):
+        session_res = json.dumps(data)
+        for res in data:
+            for ind in range(0, len(data)):
+                tara = res[ind]['truckTara']
+                neto = res[ind]['neto']
+                session.append(tara, neto)
+        return jsonify(session)
+        
     return "provide a truck ID"
 
 

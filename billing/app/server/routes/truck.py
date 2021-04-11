@@ -7,7 +7,7 @@ from app.server.db.helper import helper
 truck_blueprint = Blueprint('truck_blueprint', __name__)
 
 
-@truck_blueprint.route("/truck", methods=['POST', 'PUT', 'GET'])
+@truck_blueprint.route("/truck", methods=['POST'])
 def truck():
     if request.method == 'POST':
 
@@ -28,25 +28,3 @@ def truck():
 
         elif not truck_id:
             return 'Please provide a valid truck ID'
-            
-    elif request.method == 'PUT':
-        pass
-        
-    elif request.method == 'GET':
-	    pass
-
-
-@truck_blueprint.route("/test")
-def test():
-    provider1 = helper.add_instance(Provider,
-                                    name=tomer)
-
-    rate1 = helper.add_instance(Rate,
-                                product_name='cucumba',
-                                rate=200,
-                                scope=provider1.id)
-
-    truck1 = helper.add_instance(Truck,
-                                 truck_id='1234',
-                                 provider_id=provider1.id)
-    return 'Hello!'

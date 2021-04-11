@@ -1,8 +1,8 @@
 version: '3'
 
-volumes:
-  mysql-data:
-    driver: local
+#volumes:
+#  mysql-data:
+#    driver: local
 
 services:
   app:
@@ -27,6 +27,6 @@ services:
       - MYSQL_DATABASE=db
       - MYSQL_USER=flask
       - MYSQL_PASSWORD=flask
-    volumes:
-      - mysql-data:/var/lib/mysql
+#    volumes:
+#      - mysql-data:/var/lib/mysql
     hostname: db

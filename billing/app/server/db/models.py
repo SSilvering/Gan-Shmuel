@@ -38,7 +38,7 @@ class Truck(db.Model):
 
     truck_id = Column(String(50), unique=True)
     weight = Column(Float)
-    unit = Column(String(50))
+    unit = Column(String(50), default="KG")
 
     provider_id = Column(Integer, ForeignKey('provider.id'))
 

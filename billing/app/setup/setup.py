@@ -9,6 +9,8 @@ from app.server.routes.provider import provider_blueprint
 from app.server.routes.rates import rates_blueprint
 from app.server.routes.truck import truck_blueprint
 from app.server.routes.test import test_blueprint
+from app.server.routes.truckPut import truckPut_blueprint
+from app.server.routes.truckGet import truckGet_blueprint
 
 # ------- local imports -------
 from app.server.db.extensions import db
@@ -31,4 +33,6 @@ def create_app(config_file):
         app.register_blueprint(rates_blueprint)
         app.register_blueprint(truck_blueprint)
         app.register_blueprint(test_blueprint)
+        app.register_blueprint(truckPut_blueprint)
+        app.register_blueprint(truckGet_blueprint)
         return app

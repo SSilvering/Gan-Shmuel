@@ -11,14 +11,12 @@ truckGet_blueprint = Blueprint('truckGet_blueprint', __name__)
 import requests
 from app.setup.settings import WEIGHT_URI
 
-def get_sessions(truck_id, from_arg, to_arg):
+def get_truck_info(truck_id, from_arg, to_arg):
 	try:
 		response = requests.get(WEIGHT_URI+f'/item/{truck_id}',
 			params={'from': from_arg, 'to': to_arg})
 		response.raise_for_status()
-		return response.json()['sessions']
-	except JSONDecodeError as json_error:
-		print(f'Json responce decoding: {json_error}')	
+		return response
 	except (HTTPError, ConnectionError) as err:
 		print(f'Bad responce from WEIHGT server: {err}')  
 	return 'mocked get_sessions because of bad respone from WEIGHT server'
@@ -30,8 +28,8 @@ def truckGet(id):
 	if request.method == 'GET':
 		truck = helper.get_one(Truck, truck_id=id)
 		if truck is None:
-			return 'truck ID not exist', 404
-		now = datetime.now()	
+			return ('truck ID not exist', 404)
+		now = datetime.now()
 		from_default = now.strftime('%Y%m') +'01000000'
 		to_default = now.strftime('%Y%m%d%H%M%S')
 		
@@ -56,5 +54,9 @@ def truckGet(id):
 				datetime(to_arg[0:4], to_arg[4:6], to_arg[6:8], to_arg[8:10], to_arg[10:12], to_arg[12:14])
 			except(ValueError):
 				return "wrong datetime value"
-				
-	return jsonify(id=truck.truck_id, tara=truck.weight, sessions=get_sessions(truck.truck_id, from_arg, to_arg))
+	
+	try:
+		truck_info=	get_truck_info(truck.truck_id, from_arg, to_arg).json()		
+		return jsonify(id=truck.truck_id, tara=truck_info['tara'], sessions=truck_info['sessions'])
+	except JSONDecodeError as json_error:
+		return jsonify(id=truck.truck_id, tara=None, sessions=f'Json responce decoding error: {json_error}')

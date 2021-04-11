@@ -41,7 +41,7 @@ def truckGet(id):
 			except(ValueError):
 				return "wrong datetime value"
 				
-		to_arg = request.args.get('from')
+		to_arg = request.args.get('to')
 		if not to_arg:
 			to_arg = datetime.now()
 		else:

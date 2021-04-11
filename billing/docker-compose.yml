@@ -19,6 +19,7 @@ services:
       - db
     ports:
       - "8081:5000"
+      - "8085:5000"
     volumes:
       - ./app/xlsx:/in
 

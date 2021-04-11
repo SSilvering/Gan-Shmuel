@@ -39,9 +39,9 @@ def GETweight_startup():
     from_time = request.args.get('from', default = start_of_day, type = str)
     to_time = request.args.get('to', default = currenttime, type = str)
     filter_type = request.args.get('filter', default = '*', type = str)
-    db_name = "weight_testing_db"
-    #return GETweight(from_time,to_time,filter_type,db_name)
-    return "Hello from GET/weight!"
+    #db_name = "weight_testing_db"
+    return GETweight(from_time,to_time,filter_type)
+    #return "Hello from GET/weight!"
 #=======================
 #=======================
 

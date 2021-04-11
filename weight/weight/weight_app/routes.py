@@ -8,14 +8,12 @@ from .POSTweight import POSTweight
 #from get_weight import get_weight
 from .GETweight import GETweight
 from .db_module import DB_Module
-
-
+import json
 
 @weight_app.route('/')
 @weight_app.route('/index')
 def index():
     return "Hello, World!"
-
 
 @weight_app.route('/health', methods=['GET'])
 def health_check():
@@ -29,7 +27,6 @@ def health_check():
             res = f"APP Status is {req.status_code}"
             return res
     return f"APP status is {req.status_code}"
-
 
 @weight_app.route('/weight', methods=['POST'])
 def post_weight():
@@ -64,7 +61,6 @@ def get_session(id="<id>"):
         
     return "provide a truck ID"
 
-
 @weight_app.route('/weight', methods=['GET'])
 def GETweight_startup():
     currenttime = strftime("%Y%m%d%H%M%S", gmtime())
@@ -75,8 +71,6 @@ def GETweight_startup():
     return GETweight(from_time,to_time,filter_type)
 #=======================
 #=======================
-
-
 
 @weight_app.route('/item')
 def get_only_item():
@@ -115,6 +109,3 @@ def get_item(item_id):
 
     return jsonify(session)
     # return get_sql(to_time,from_time,id)
-
-
-    

@@ -1,32 +1,38 @@
-import mysql.connector
+# import mysql.connector
 
 
-def get_sql(to_time,from_time,id,query):
-    try:
-        database = mysql.connector.connect(
-            host='db',
-            user='root',
-            password='123',
-            database="weight_testing_db"
-        )
-    except:
-        return "Database connection refused..."
+# def get_sql(to_time,from_time,id):
+#     try:
+#         database = mysql.connector.connect(
+#             host='db',
+#             user='root',
+#             password='123',
+#             database="weight_testing_db"
+#         )
+#     except:
+#         return "Database connection refused..."
 
-    fetcher = database.cursor()
+#     fetcher = database.cursor()
 
-    fetcher.execute(query) #run sql query
+#     query = f"SELECT (bruto,neto,id) FROM sessions"
 
-    for lines in fetcher: #iterate through our returned object (data,data,data,data)
-        print(x)
+#     fetcher.execute(query) #run sql query
 
-    data = {
-        "id":id,
-        "tara":to_time,
-        "sessions":from_time
-    }
 
-    #close connections
-    fetcher.close()
-    database.close()
+#     for line in 
+#     data = {
+#         "id":id,
+#         "tara":0,
+#         "sessions":[]
+#     }
 
-    return data
+#     # for (bruto,neto,id) in fetcher: #iterate through our returned object (data,data,data,data)
+#     #     data["tara"] = float(bruto) - float(neto)
+#     #     data["sessions"].append(id)
+
+
+#     #close connections
+#     fetcher.close()
+#     database.close()
+
+#     return data

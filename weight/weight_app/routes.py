@@ -104,5 +104,7 @@ def get_item(item_id):
 
     return jsonify(session)
 
-
+@weight_app.route('/batch-weight', methods=['POST'])
+def batch_weight():
+    return "Hello from batch weight"
     

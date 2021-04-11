@@ -6,7 +6,7 @@ version: '3'
 
 services:
   app:
-    image: billing
+    image: "billing:${TAG}"
     restart: unless-stopped
     build: .
 

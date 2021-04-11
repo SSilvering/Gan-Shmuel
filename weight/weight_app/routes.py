@@ -33,7 +33,9 @@ def health_check():
 @weight_app.route("/session/<id>")
 def get_session(id="<id>"):
     if id is not None:
-        select_query = f"SELECT id, trucks_id, bruto, neto FROM sessions where trucks_id={id}"
+        #select_query = f"SELECT id, trucks_id, bruto, neto FROM sessions where trucks_id={id}"
+         
+        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.neto, t2.weight FROM sessions t1, trucks t2 WHERE t1.trucks_id = {id} and t1.trucks_id = t2.truckid"
         tags = ('id', 'trucks_id', 'bruto', 'neto')
         db = DB_Module ()
         data = db.fetch_new_data(select_query)
@@ -41,8 +43,7 @@ def get_session(id="<id>"):
         session = dict()
         for ind in range(0, len(data)):
             session[tags[ind]] = data[ind]
-        sessio_jason = json.dumps(data)
-        return sessio_jason
+        return json.dumps(session)
     return "provide a truck ID"
 
 

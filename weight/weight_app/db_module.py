@@ -22,12 +22,12 @@ class DB_Module(object):
         rows_list = []
 
         conn = self.getConnection()
-        cur = conn.cursor(dictionary=True)
+        cur = conn.cursor(dictionary=True, buffered=True)
+        #cur = conn.cursor()
         cur.execute(SELECT_QUERY)
-        
         for result_row in cur:
             rows_list.append(result_row)
         
-        # row_list is a list containing tuples
+        #row_list is a list containing tuples
 
         return rows_list

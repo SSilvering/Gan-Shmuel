@@ -13,7 +13,27 @@ rates_blueprint = Blueprint('rates_blueprint', __name__)
 
 @rates_blueprint.route("/rates", methods=['GET'])
 def download_rates_to_xml():
-    return "OK\n", 200
+    if request.method == 'GET':
+        output_dir = os.path.join('app','downloads')
+        output_file = 'rates.xlsx'
+        data = helper.get_all(Rate)
+        wb = Workbook()
+        ws = wb.active
+        if not os.path.isdir(output_dir):
+            os.mkdir(output_dir)
+        headers = ['Product','Rate','Scope']
+        for col_num,header in enumerate(headers):
+            ws.cell(row=1, column=col_num+1).value = header
+        for row_num, row in enumerate(data):
+            real_row_num = row_num + 2
+            ws.cell(row=real_row_num, column=1).value = row.product_name
+            ws.cell(row=real_row_num, column=2).value = row.rate
+            ws.cell(row=real_row_num, column=3).value = row.scope
+
+        wb.save(os.path.join(output_dir,output_file))
+        print(os.getcwd())
+        return "Ok", 200
+
 
 
 @rates_blueprint.route("/rates", methods=['POST'])

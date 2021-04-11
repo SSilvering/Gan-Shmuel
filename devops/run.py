@@ -7,6 +7,8 @@ import subprocess
 # logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 branches = ['billing', 'weight', 'master']
+ports = {'weight_prod': '8084', 'weight_stg': '8083', 'billing_prod': '8082', 'billing_stg': '8081'}
+flags = {'commit': 'commit', 'test': 'test', 'commit': 'commit'}
 app = Flask(__name__)
 
 
@@ -29,23 +31,30 @@ def hook():
         if data.get("ref"):
 
             branch = data.get("ref").split("/")[2]
-            commit = data.get("after")
+            sha = data.get("after")
 
             if branch in branches:
-                if up_container(branch, commit):
+                if up_container(branch, sha, port=None, flag=flags.get('commit')):
                     return Response(status=200)
 
         elif data.get("action") == "opened":
             branch = data.get("pull_request", {}).get("head", {}).get("ref")
-            commit = data.get("pull_request", {}).get("head", {}).get("sha")
+            sha = data.get("pull_request", {}).get("head", {}).get("sha")
 
             if branch in branches:                
                 ## TODO: run tests on code, if it pass, approve PR and push to master
-                if up_container(branch, commit):
+                if up_container(branch, sha,port=ports.get(branch+'_stg'), flag=flags.get('test')):
+                    return Response(status=200)
+## docker exec /app/testing.sh and see whats returns, if return OK, shuting down container and power it up on production mode (port 8082 or 8084 fit to the branch).
+## if it fails, return 1 to flask and annonce the commiter.
+        elif data.get("action") == "submitted":
+            branch = data.get("______", {}).get("head", {}).get("ref")
+            sha = data.get("_______", {}).get("head", {}).get("sha")
+            if branch == 'master':
+                if up_container(branch, sha, port=None, flag=flags.get('merge')):
                     return Response(status=200)
 
-            ## docker exec /app/testing.sh and see whats returns, if return OK, shuting down container and power it up on production mode (port 8082 or 8084 fit to the branch).
-            ## if it fails, return 1 to flask and annonce the commiter.
+
     return Response(status=500, headers={"error":branch})
 
 
@@ -62,9 +71,9 @@ def health():
     print("Health Check")
     return Response(status=200)
 
-def up_container(branch, commit):
+def up_container(branch, sha, port, flag):
 
-    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch} {commit} > script.out"
+    commands = f"chroot /host  /home/ec2-user/Gan-Shmuel/devops/scripts/up-container {branch} {sha} {port} {flag} > script.out"
 
     p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
 

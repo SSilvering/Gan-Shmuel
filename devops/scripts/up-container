@@ -2,11 +2,15 @@
 
 BRANCH=$1
 COMMIT=$2
+PORT=$3
+FLAG=$4
 
 echo -e "\e[1;31m\t Trying to building up service\e[0m"
 
 echo "$BRANCH"
-echo "$COMMIT"
+echo "$SHA"
+echo "$PORT"
+echo "$FLAG"
 
 if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "master" ]
     then
@@ -41,7 +45,22 @@ if [ "$BRANCH" = "billing" ] || [ "$BRANCH" = "weight" ] || [ "$BRANCH" = "maste
         # else
         #     docker-compose up -d --build --force-recreate
         # fi    
-        docker-compose up -d --build --force-recreate && \
+
+        export TAG="$SHA" && \
+
+        if [ "${FLAG}" = 'commit' ] then
+            docker-compose up -d --build --force-recreate && \
+            echo 'test: commit'
+        elif [ "${FLAG}" = 'test' ] then  # ADD PORT
+            if [ docker image ls | grep -c "${SHA}" -eq 1 ] then
+                docker-compose exec app/test $PORT && \  # ????? RETURN ?????
+                # docker-compose up -d --force-recreate && \
+            fi
+            echo 'test: test'
+        elif [ "${FLAG}" = 'merge' ] then
+            
+            echo 'test: merge'
+        fi
 
         
         echo -e "\e[1;36m[+] Removing folder\e[0m" && \

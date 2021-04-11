@@ -1,6 +1,7 @@
 #create a servece of mysql
 
 version: "2.1"
+#version: "3.8"
 services: 
   db: 
     image: mysql
@@ -18,7 +19,7 @@ services:
         retries: 100
     
   app:
-    image: weight:$IMG_COMMIT
+    image: "weight:${TAG}" 
     build: ./weight
     depends_on:
       db:

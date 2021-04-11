@@ -7,6 +7,10 @@ import mysql.connector
 from . import weight_app
 from .GETweight import GETweight
 from .get_item import get_sql
+from .db_module import DB_Module
+import json
+
+
 
 @weight_app.route('/')
 @weight_app.route('/index')
@@ -31,7 +35,21 @@ def health_check():
 @weight_app.route('/session')
 @weight_app.route('/session/<id>')
 def get_session(id="<id>"):
-    return "Session"
+    if id is not None:
+        #select_query = f"SELECT id, trucks_id, bruto, neto FROM sessions where trucks_id={id}"
+         
+        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.neto, t2.weight FROM sessions t1, trucks t2 WHERE t1.trucks_id = {id} and t1.trucks_id = t2.truckid"
+        tags = ('id', 'trucks_id', 'bruto', 'neto')
+        db = DB_Module ()
+        data = db.fetch_new_data(select_query)
+        print(type(data))
+        session = dict()
+        for ind in range(0, len(data)):
+            session[tags[ind]] = data[ind]
+        return json.dumps(session)
+    return "provide a truck ID"
+
+
 @weight_app.route('/weight', methods=['GET'])
 def GETweight_startup():
     currenttime = strftime("%Y%m%d%H%M%S", gmtime())
@@ -61,4 +79,4 @@ def get_item(id):
     # print (f'start time: {from_time} end time: {to_time}')
     query = f"SELECT (bruto,neto,id) from sessions WHERE date BETWEEN {from_time} AND {to_time}"
 
-    return get_sql(to_time,from_time,id,query)
+    

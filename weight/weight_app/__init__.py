@@ -3,6 +3,7 @@ import requests
 import mysql.connector
 from mysql.connector import Error
 
+
 weight_app = Flask(__name__)
 
 from weight_app import routes, GETweight, get_item

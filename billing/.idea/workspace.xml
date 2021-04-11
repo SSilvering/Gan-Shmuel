@@ -24,10 +24,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac104236-d163-4544-ae75-6689422d5591" name="Default Changelist" comment="Merge branch 'billing' of https://github.com/SSilvering/Gan-Shmuel into billing&#10;&#10;# Conflicts:&#10;#&#9;billing/app/server/routes/provider.py&#10;#&#9;billing/app/server/routes/rates.py&#10;#&#9;billing/app/server/routes/truck.py&#10;#&#9;billing/app/setup/billing.db&#10;#&#9;billing/app/setup/settings.py">
+      <change beforePath="$PROJECT_DIR$/app/server/routes/bill.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/bill.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/server/routes/provider.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/provider.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/server/routes/rates.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/rates.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/server/routes/truckGet.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/truckGet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/server/routes/truckPut.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/server/routes/truckPut.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/setup/billing.db" beforeDir="false" afterPath="$PROJECT_DIR$/app/setup/billing.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -65,7 +63,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python tests.Unittests for test_api.TestApp.test_add_truck_succeeds">
+  <component name="RunManager" selected="Python.run">
     <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="billing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -135,9 +133,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Unittests for test_api.TestApp.test_add_truck_succeeds" />
         <item itemvalue="Python.run" />
         <item itemvalue="Python tests.Unittests in test_api.py" />
+        <item itemvalue="Python tests.Unittests for test_api.TestApp.test_add_truck_succeeds" />
         <item itemvalue="Python tests.Unittests for test_api.TestApp" />
       </list>
     </recent_temporary>
@@ -155,7 +153,7 @@
       <workItem from="1618051570524" duration="4372000" />
       <workItem from="1618145949005" duration="154000" />
       <workItem from="1618151629674" duration="1693000" />
-      <workItem from="1618156730352" duration="3014000" />
+      <workItem from="1618156730352" duration="5062000" />
     </task>
     <servers />
   </component>
@@ -187,22 +185,22 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="100" y="100" width="1720" height="880" key="DiffContextDialog/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618143095027" />
-    <state width="1876" height="244" key="GridCell.Tab.0.bottom" timestamp="1618161583440">
+    <state width="1876" height="283" key="GridCell.Tab.0.bottom" timestamp="1618163225943">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="244" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583440" />
-    <state width="1876" height="244" key="GridCell.Tab.0.center" timestamp="1618161583436">
+    <state width="1876" height="283" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618163225943" />
+    <state width="1876" height="283" key="GridCell.Tab.0.center" timestamp="1618163225941">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="244" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583436" />
-    <state width="1876" height="244" key="GridCell.Tab.0.left" timestamp="1618161583435">
+    <state width="1876" height="283" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618163225941" />
+    <state width="1876" height="283" key="GridCell.Tab.0.left" timestamp="1618163225941">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="244" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583435" />
-    <state width="1876" height="244" key="GridCell.Tab.0.right" timestamp="1618161583439">
+    <state width="1876" height="283" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618163225941" />
+    <state width="1876" height="283" key="GridCell.Tab.0.right" timestamp="1618163225942">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1876" height="244" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161583439" />
+    <state width="1876" height="283" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618163225942" />
     <state x="75" y="49" width="1614" height="959" key="MergeDialog" timestamp="1618156806198">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -225,10 +223,14 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="318" y="23" width="1299" height="934" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1618153112923" />
+    <state x="625" y="241" width="670" height="676" key="search.everywhere.popup" timestamp="1618161724666">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="625" y="241" width="670" height="676" key="search.everywhere.popup/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1618161724666" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/billing$run.coverage" NAME="run Coverage Results" MODIFIED="1618161574350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/billing$Unittests_in_test_api_py.coverage" NAME="Unittests in test_api.py Coverage Results" MODIFIED="1618161524239" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
+    <SUITE FILE_PATH="coverage/billing$run.coverage" NAME="run Coverage Results" MODIFIED="1618163215632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/billing$Unittests_in_test_api_py.coverage" NAME="Unittests in test_api.py Coverage Results" MODIFIED="1618161763848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
     <SUITE FILE_PATH="coverage/billing$Unittests_for_test_api_TestApp_test_add_truck_succeeds.coverage" NAME="Unittests for test_api.TestApp.test_add_truck_succeeds Coverage Results" MODIFIED="1618161583423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
     <SUITE FILE_PATH="coverage/billing$Unittests_for_test_api_TestApp.coverage" NAME="Unittests for test_api.TestApp Coverage Results" MODIFIED="1618056608423" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/tests/api_testing" />
   </component>

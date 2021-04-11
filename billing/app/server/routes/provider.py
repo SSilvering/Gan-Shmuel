@@ -40,12 +40,15 @@ def put_collection(id):
 
 @provider_blueprint.route("/provider", methods=['POST'])
 def provider():
-    # get provider name from args
-    name = (request.form and request.form["name"]) or (request.json and request.json.get("name"))
-    if name is None:
+    name = request.args.get('name')
+
+    if not name:
         return 'Bad parameters, expected {"name":"<name>"}\n', 400
+
     found_name = helper.get_one(Provider, name=name)
+
     if found_name:
-        return "Already Exists\n", 400
+        return "Provider already Exists\n", 400
+
     else:
         return create_id(name), 200

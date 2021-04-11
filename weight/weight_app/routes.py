@@ -81,7 +81,7 @@ def get_item(item_id):
     print(from_time,to_time)
     # query = f"select neto,bruto,id from sessions where date between {from_time} and {to_time}"
     # query = f"select (neto,bruto,trucks_id) from sessions"
-    query = "select bruto,neto,id from sessions"
+    query = f"select bruto,neto,id from sessions where "
 
     try:
         db = DB_Module ()

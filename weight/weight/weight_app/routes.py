@@ -48,7 +48,8 @@ def post_weight():
 def get_session(id="<id>"):
     if id is not None:
         select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, \
-            CASE WHEN t1.direction = 'out' then (select t1.bruto-t1.neto AS 'truckTara' FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid ) end as trackTara, t1.neto FROM \
+            CASE WHEN t1.direction = 'out' then (select t1.bruto-t1.neto AS 'truckTara' FROM sessions t1, \
+                trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid ) end tara, t1.neto FROM \
                 sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         
         db = DB_Module ()

@@ -43,27 +43,24 @@ def post_weight():
 
     return POSTweight(direction, truck, containers, weight, weight_type, force, produce)
 
-@weight_app.route('/session')
-@weight_app.route('/session/<id>')
+@weight_app.route("/session")
+@weight_app.route("/session/<id>")
 def get_session(id="<id>"):
     if id is not None:
-        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.neto, t1.bruto-t1.neto AS 'truckTara', t2.weight FROM sessions t1, \
-            trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
+        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, \
+            CASE WHEN t1.direction = 'out' then (select t1.bruto-t1.neto AS 'truckTara' FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid ) end as trackTara, t1.neto FROM \
+                sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
+        
         db = DB_Module ()
         
         data = db.fetch_new_data(select_query)
         session = []
         #for ind in range(0, len(data)):
-        session_res = json.dumps(data)
         for res in data:
-            for ind in range(0, len(data)):
-                tara = res[ind]['truckTara']
-                neto = res[ind]['neto']
-                session.append(tara, neto)
+            session.append(res)
         return jsonify(session)
         
     return "provide a truck ID"
-
 
 @weight_app.route('/weight', methods=['GET'])
 def GETweight_startup():

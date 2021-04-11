@@ -1,0 +1,36 @@
+version: '3'
+
+#volumes:
+#  mysql-data:
+#    driver: local
+
+services:
+  app:
+    image: "billing:${TAG}"
+    restart: unless-stopped
+    build: .
+
+    hostname: app
+    expose:
+      - "8081"
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - "8081:5000"
+      - "8085:5000"
+    volumes:
+      - ./app/xlsx:/in
+
+  db:
+#for mysql:latest add cryptograpy to requirements
+    image: mysql:5.7.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=flask
+      - MYSQL_PASSWORD=flask
+#    volumes:
+#      - mysql-data:/var/lib/mysql
+    hostname: db

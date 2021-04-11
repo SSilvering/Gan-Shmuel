@@ -136,3 +136,8 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+##IF YOU SEE THIS REMOVE IT
+*.csv
+*.json
+*xlsx

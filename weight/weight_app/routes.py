@@ -6,10 +6,8 @@ from flask import request, jsonify
 import mysql.connector
 from . import weight_app
 from .GETweight import GETweight
-# from .get_item import get_sql
 from .db_module import DB_Module
-import json
-
+import csv,json
 
 
 @weight_app.route('/')
@@ -79,7 +77,7 @@ def get_item(item_id):
         to_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
     # query = f"SELECT bruto,neto,id FROM sessions WHERE id={item_id}"
-    query = f"SELECT bruto,neto,id FROM sessions WHERE id={item_id} BETWEEN {from_time} AND {to_time}"
+    query = f"SELECT bruto,neto,id,date FROM sessions WHERE id={item_id} AND date BETWEEN {from_time} AND {to_time}"
 
     data = []
     try:
@@ -106,5 +104,29 @@ def get_item(item_id):
 
 @weight_app.route('/batch-weight', methods=['POST'])
 def batch_weight():
-    return "Hello from batch weight"
+
+    filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers2.csv'
+    # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers3.json'
+    
+    data = {}
+    is_csv = False
+
+    with open(filepath,'r') as my_file:
+        try:
+            data = json.load(my_file)
+        except:
+            is_csv = True
+
+    if is_csv:
+        with open(filepath,'r') as csv_file:
+            reader = csv.DictReader(csv_file)
+            for line in reader:
+                _id = list(line.values())[0]
+                weight = list(line.values())[1]
+                unit = list(line.keys())[1]
+
+                print(_id,weight,unit)
+            
+
+    return "FUCK"
     

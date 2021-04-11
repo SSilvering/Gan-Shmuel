@@ -78,29 +78,31 @@ def get_item(item_id):
     if not to_time:
         to_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
-    print(from_time,to_time)
-    # query = f"select neto,bruto,id from sessions where date between {from_time} and {to_time}"
-    # query = f"select (neto,bruto,trucks_id) from sessions"
-    query = f"select bruto,neto,id from sessions where "
+    # query = f"SELECT bruto,neto,id FROM sessions WHERE id={item_id}"
+    query = f"SELECT bruto,neto,id FROM sessions WHERE id={item_id} BETWEEN {from_time} AND {to_time}"
 
+    data = []
     try:
         db = DB_Module ()
         data = db.fetch_new_data(query)
     except:
-        print("my sql has failed for some weird reason :(")
+        print ("mysql has failed to reach the server..")
 
     session = {
         "id":int(item_id),
         "tara":0,
         "sessions":[]
     }
+    
+    if not data:
+        session["id"] = 404,
+        session["tara"] = 'N/A'
 
     for ind in range(0, len(data)):
         session["tara"] += float(data[ind]["bruto"]) - float(data[ind]["neto"])
         session["sessions"].append(data[ind]["id"])
 
     return jsonify(session)
-    # return get_sql(to_time,from_time,id)
 
 
     

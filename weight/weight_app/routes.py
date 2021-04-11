@@ -2,11 +2,11 @@
 from weight_app import weight_app, requests, GETweight
 from time import gmtime, strftime
 from datetime import datetime
-from flask import request
+from flask import request, jsonify
 import mysql.connector
 from . import weight_app
 from .GETweight import GETweight
-from .get_item import get_sql
+# from .get_item import get_sql
 from .db_module import DB_Module
 import json
 
@@ -61,26 +61,46 @@ def GETweight_startup():
     get_weight(from_time,to_time,filter_type,db_name)
     return GETweight(from_time,to_time,filter_type,db_name)
     #return "Hello from GET/weight!"
-#=======================
-#=======================
 
 
 
 @weight_app.route('/item')
 def get_only_item():
     return "Hello from Item!"
-@weight_app.route('/item/<id>', methods=['GET'])
-def get_item(id):
+@weight_app.route('/item/<item_id>', methods=['GET'])
+def get_item(item_id):
+
     from_time = request.args.get('from')
     to_time = request.args.get('to')
 
     if not from_time:
-        from_time = datetime.now().strftime("%Y-%m-01 00:00:00")
+        from_time = datetime.now().strftime("%Y%m01000000")
     if not to_time:
-        to_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        to_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
+    print(from_time,to_time)
+    # query = f"select neto,bruto,id from sessions where date between {from_time} and {to_time}"
+    # query = f"select (neto,bruto,trucks_id) from sessions"
+    query = "select bruto,neto,id from sessions"
 
-    return get_sql(to_time,from_time,id)
+    try:
+        db = DB_Module ()
+        data = db.fetch_new_data(query)
+    except:
+        print("my sql has failed for some weird reason :(")
+
+    session = {
+        "id":int(item_id),
+        "tara":0,
+        "sessions":[]
+    }
+
+    for ind in range(0, len(data)):
+        session["tara"] += float(data[ind]["bruto"]) - float(data[ind]["neto"])
+        session["sessions"].append(data[ind]["id"])
+
+    return jsonify(session)
+    # return get_sql(to_time,from_time,id)
 
 
     

@@ -1,5 +1,6 @@
-from time import gmtime, strftime
-import mysql.connector
+from . import weight_app
+from .db_module import DB_Module
+import json
 from flask import jsonify
 class session:
     id = "K-0000"
@@ -7,40 +8,30 @@ class session:
     bruto = 0
     neto = 0
     produce = "product_name"
-    #container = ""
-    def __init__(self, id, direction, bruto, neto, product_name): #, container):
+    containers = []
+    def __init__(self, id, direction, bruto, neto, product_name, containers):
         self.id = id
         self.direction = direction
         self.bruto = bruto
         self.neto = neto
         self.product_name = product_name
-        #self.container = container
-
+        self.containers = ["0","0"]
 
 def GETweight(from_time,to_time,filter_type):
     #time_format yyyymmddhhmmss
-    mydb = mysql.connector.connect(host="db", user="root", password="123", database="weight_testing_db")
-    #mydb = DB_Module()
-    sql_string = "SELECT * FROM sessions WHERE date BETWEEN %s AND %s;" % (from_time,to_time)
+    mydb = DB_Module()
+    session_list = []
+    sql_string = "SELECT id,direction,bruto,neto,products_id FROM sessions WHERE date BETWEEN %s AND %s;" % (from_time,to_time)
     if filter_type=="in" or filter_type=="out":
         sql_string+=" AND direction='%s'"
-    mycursor = mydb.cursor()
-    mycursor.execute(sql_string)
-    myresults = mycursor.fetchall()
-    #myresults = mydb.fetch_new_data(sql_string)
-    for result in myresults:
-        #sessions (id, direction, f, date, bruto, neto, trucks_id, products_id)
-        id = result[0]
-        print(id)
-        bruto = result[4]
-        print(bruto)
-        neto = result[5]
-        print(neto)
-        product_id = result[7]
-        print(product_id)
-        mycursor.execute("SELECT product_name FROM products WHERE id='%d';" % product_id)
-        produce = mycursor.fetchone()
-        #This returns an empty set!
-        ##mycursor.execute("SELECT containers_id FROM containers_has_sessions WHERE sessions_id='%s';" % result)
-        ##container = mycursor.fetchone()
-    return jsonify(id=id,bruto=bruto,neto=neto,produce=produce)
+    myresults = mydb.fetch_new_data(sql_string)
+    for ind in range(0,len(myresults)):
+        id = int(myresults[ind]["id"])
+        bruto = float(myresults[ind]["bruto"])
+        neto = float(myresults[ind]["neto"])
+        product_name = str(myresults[ind]["product_name"])
+        direction = str(myresults[ind]["direction"])
+        containers_list_from_db_list = mydb.fetch_new_data("SELECT containers_id FROM containers_has_sessions WHERE sessions_id = %d" % id)
+        containers = json.dumps(containers_list_from_db_list, indent = 2)
+        session_list = session_list.append( session(id, direction, bruto, neto, product_name, containers) )
+    return json.dumps(myresults, indent = 7)

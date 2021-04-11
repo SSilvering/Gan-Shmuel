@@ -2,7 +2,7 @@
 from weight_app import weight_app, requests, GETweight
 from time import gmtime, strftime
 from datetime import datetime
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 import mysql.connector
 from . import weight_app
 from .GETweight import GETweight
@@ -13,7 +13,7 @@ import csv,json
 @weight_app.route('/')
 @weight_app.route('/index')
 def index():
-    return "Hello, World!"
+    return render_template('index.html')
 
 
 @weight_app.route('/health', methods=['GET'])
@@ -107,8 +107,13 @@ def batch_weight():
 
     filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers2.csv'
     # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers3.json'
-    
-    data = {}
+    query_list = []
+    data = []
+    try:
+        db = DB_Module ()
+        data = db.fetch_new_data(query)
+    except:
+        print ("mysql has failed to reach the server..")
     is_csv = False
 
     with open(filepath,'r') as my_file:
@@ -117,6 +122,7 @@ def batch_weight():
         except:
             is_csv = True
 
+    
     if is_csv:
         with open(filepath,'r') as csv_file:
             reader = csv.DictReader(csv_file)
@@ -124,9 +130,11 @@ def batch_weight():
                 _id = list(line.values())[0]
                 weight = list(line.values())[1]
                 unit = list(line.keys())[1]
-
+                query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
+                query_list.append(query)
                 print(_id,weight,unit)
-            
+    
+    #execute queries
 
     return "FUCK"
     

@@ -1,0 +1,8 @@
+Flask
+requests
+<<<<<<< HEAD
+numpy
+mysql-connector-python
+=======
+mysql-connector-python
+>>>>>>> branch migration

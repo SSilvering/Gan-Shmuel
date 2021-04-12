@@ -23,7 +23,7 @@ def health_check():
         req = requests.get(uri)
         print(req.status_code)
         if req.status_code < 200 or req.status_code > 299:
-            res = f"APP Status is {req.status_code}"
+            res = f"APP api-{item} Status is {req.status_code}"
             return res
     return f"APP status is {req.status_code}"
 
@@ -40,6 +40,9 @@ def post_weight():
     return POSTweight(direction, truck, containers, weight, weight_type, force, produce)
 
 @weight_app.route("/session")
+def check_sesion():
+    return "Hello there! Session is working"
+
 @weight_app.route("/session/<id>")
 def get_session(id="<id>"):
     if id is not None:

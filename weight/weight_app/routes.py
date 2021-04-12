@@ -71,28 +71,28 @@ def get_item(item_id):
     from_time = request.args.get('from')
     to_time = request.args.get('to')
 
-    if not from_time:
+    data = []
+    session = { #basic mold for the return object
+        "id":int(item_id),
+        "tara":0,
+        "sessions":[]
+    }
+
+    if not from_time: #default cases for time 
         from_time = datetime.now().strftime("%Y%m01000000")
     if not to_time:
         to_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
-    # query = f"SELECT bruto,neto,id FROM sessions WHERE id={item_id}"
     query = f"SELECT bruto,neto,id,date FROM sessions WHERE id={item_id} AND date BETWEEN {from_time} AND {to_time}"
 
-    data = []
     try:
         db = DB_Module ()
         data = db.fetch_new_data(query)
     except:
         print ("mysql has failed to reach the server..")
 
-    session = {
-        "id":int(item_id),
-        "tara":0,
-        "sessions":[]
-    }
     
-    if not data:
+    if not data: #error case 
         session["id"] = 404,
         session["tara"] = 'N/A'
 
@@ -109,30 +109,31 @@ def batch_weight():
     # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers3.json'
     query_list = []
     data = []
-    try:
+    is_csv = False
+    
+    try: 
         db = DB_Module ()
         data = db.fetch_new_data(query)
     except:
-        print ("mysql has failed to reach the server..")
-    is_csv = False
+        return "Failed to connect to database"
 
-    with open(filepath,'r') as my_file:
+    with open(filepath,'r') as my_file: #case if it's JSON
         try:
             data = json.load(my_file)
         except:
             is_csv = True
 
     
-    if is_csv:
+    if is_csv: #case if it's CSV
         with open(filepath,'r') as csv_file:
             reader = csv.DictReader(csv_file)
             for line in reader:
                 _id = list(line.values())[0]
                 weight = list(line.values())[1]
                 unit = list(line.keys())[1]
+
                 query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
                 query_list.append(query)
-                print(_id,weight,unit)
     
     #execute queries
 

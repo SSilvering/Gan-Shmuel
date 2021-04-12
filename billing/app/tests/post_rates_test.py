@@ -7,6 +7,7 @@ from os import path
 from app.server.db.helper import helper
 import sys
 
+from app.server.routes import rates
 class MyTest(TestCase):
     SQLALCHEMY_DATABASE_URI = "sqlite:///testingdb.db"
     TESTING = True
@@ -29,6 +30,7 @@ class MyTest(TestCase):
             self.assert_400(resp, "Fail: post request with wrong params")
 
     def test_correct_post_rates(self):
+        rates.XLSX_DIR = f'{path.dirname(path.realpath(__file__))}/../xlsx/'
         sys.stdout.write("testing post request with known file in the server ...\n")
         with self.app.test_client() as c:
             resp = c.post('/rates', data=dict(file="rates.xlsx"))

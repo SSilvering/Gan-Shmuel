@@ -1,4 +1,4 @@
-from weight_app import weight_app, requests, GETweight, POSTweight
+from weight_app import weight_app, requests, GETweight, POSTweight, GETunknown
 from time import gmtime, strftime
 from datetime import datetime
 from flask import request, jsonify
@@ -6,7 +6,7 @@ import mysql.connector
 from . import weight_app
 from .POSTweight import POSTweight
 from .GETweight import GETweight
-from .unknown_module import unkown_func
+from .GETunknown import unknown_func
 from .db_module import DB_Module
 import json, csv
 

@@ -4,3 +4,4 @@ flask-SQLAlchemy
 SQLAlchemy~=1.4.6
 openpyxl
 pymysql
+flask-testing

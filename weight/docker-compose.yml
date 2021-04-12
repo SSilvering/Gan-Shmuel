@@ -1,5 +1,3 @@
-#create a servece of mysql
-
 version: "2.1"
 services: 
   db: 
@@ -13,12 +11,15 @@ services:
       
     healthcheck:
         test: "/usr/bin/mysql --user=root --password=$$MYSQL_ROOT_PASSWORD --execute \"SHOW DATABASES;\""
-        interval: 5s
-        timeout: 120s
-        retries: 100
+        interval: 12s
+        timeout: 180s
+        retries: 120
     
   app:
+    image: "weight:${TAG}" 
     build: ./weight
     depends_on:
       db:
         condition: service_healthy
+    ports:
+      - "$PORT:8080"

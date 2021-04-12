@@ -135,7 +135,6 @@ INSERT INTO containers (id,weight,unit) VALUES ('K-7854',854,'lbs');
 INSERT INTO containers (id,weight,unit) VALUES ('K-6523',741,'kg');
 INSERT INTO containers (id,weight,unit) VALUES ('K-2369',120,'kg');
 INSERT INTO containers (id,weight,unit) VALUES ('K-7845',999,'lbs');
-INSERT INTO containers (id,weight,unit) VALUES ('K-7845','','lbs');
 
 INSERT INTO products (product_name,rate,scope) VALUES ('Blood',122,'ALL');
 INSERT INTO products (product_name,rate,scope) VALUES ('Mandarin',103,'ALL');

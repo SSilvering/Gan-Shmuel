@@ -53,7 +53,14 @@ def get_session(id="<id>"):
                 sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         
         db = DB_Module ()
-        
+        query = f"select direction from sessions where id={id}"
+        data = db.fetch_new_data(query)
+        for item in data:
+            if item == 'out':
+                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.bruto-t1.neto AS 'truckTara' t1.neto FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
+            else:
+                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto FROM sessions t1, \
+                    trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         data = db.fetch_new_data(select_query)
         session = []
         #for ind in range(0, len(data)):

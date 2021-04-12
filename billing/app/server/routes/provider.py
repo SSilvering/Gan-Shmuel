@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from app.server.db.extensions import db  # importing db=sqlalchny()
@@ -22,6 +24,9 @@ def put_collection(id):
     found_id = helper.get_one(Provider, id=id)
     if found_id is None:
         return "the <id> sent isn't related to any existing entry on the server\n", 406
+
+    if helper.get_one(Provider, name=new_name):
+        return "new Provider name already Exists\n", 400
     found_id.name = new_name
     helper.commit_changes()
     return "", 200
@@ -40,9 +45,10 @@ def put_collection(id):
 
 @provider_blueprint.route("/provider", methods=['POST'])
 def provider():
-    name = request.args.get('name')
+    try:
+        name = json.loads(request.data)['name']
 
-    if not name:
+    except (TypeError, KeyError):
         return 'Bad parameters, expected {"name":"<name>"}\n', 400
 
     found_name = helper.get_one(Provider, name=name)

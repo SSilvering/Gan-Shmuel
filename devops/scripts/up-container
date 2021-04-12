@@ -1,0 +1,130 @@
+#!/bin/bash
+
+BRANCH=$1
+SHA=$2
+PORTXT=$3
+FLAG=$4
+
+BILLING_TESTS=/home/ec2-user/tmp/build_${BRANCH}/Gan-Shmuel/billing/app/tests/testing.sh
+WEIGHT_TESTS=/home/ec2-user/tmp/build_${BRANCH}/Gan-Shmuel/weight/tests/testing.sh
+
+# ports = $(echo $PORT | tr " " "\n")  # check it syntax
+# billing_port = ${ports[0]}
+# weight_port = ${ports[1]}
+
+echo "$BRANCH"
+echo "$SHA"
+echo "$PORTXT"
+echo "$FLAG"
+
+cleanup() {
+    echo -e "\e[1;36m[+] Removing folder\e[0m"
+    rm -rf "/home/ec2-user/tmp/build_$BRANCH/"
+}
+
+merge_prod() {
+    echo "merge-prod"
+    
+    export PORT=8085
+    ## PORT=8085 -> testing stage billing
+    cd "billing/" && \
+    docker-compose up -d --build && \
+
+    if "$BILLING_TESTS"; then
+        export PORT=8082
+        docker-compose up -d --force-recreate && \
+        echo "Last commit of billing service in on production"
+        echo
+    else
+        echo "Rejected! Last commit of billing didnt pass test."
+        echo    
+        docker-compose down
+        cleanup
+        exit
+    fi
+    
+    export PORT=8085
+    ## PORT=8085 -> testing stage weight
+    cd "../weight/" && \
+    docker-compose up -d --build && \
+
+    if "$WEIGHT_TESTS"; then
+        export PORT=8084
+        docker-compose up -d --force-recreate && \
+        echo "Last commit of weight service in on production"
+        echo
+    else
+        echo "Rejected! Last commit of weight didnt pass test."
+        echo 
+        docker-compose down
+        cleanup
+        exit
+    fi
+}
+
+commit_staging() {
+    export PORT="$PORTXT"
+
+    TMP=$(docker image ls | grep -c "${SHA}")
+
+    if [ "$TMP" -eq 1 ] 
+    then
+        docker-compose up -d --force-recreate
+        echo "OLD IMAGE"
+    else
+        docker-compose up -d --build --force-recreate 
+        echo "NEW IMAGE"
+    fi  
+}
+
+pipeline() {
+    echo -e "\e[1;36m[+] Making Temp dir for branch\e[0m" && \
+    mkdir -p "/home/ec2-user/tmp/build_$BRANCH" && \
+
+    echo -e "\e[1;36m[+] Moving into tmp folder\e[0m" && \
+    cd "/home/ec2-user/tmp/build_$BRANCH" && \
+
+    echo -e "\e[1;36m[+] Cloning last version of the project from git\e[0m" && \
+    git clone "https://github.com/SSilvering/Gan-Shmuel.git" && \
+    
+    echo -e "\e[1;36m[+] Moving into $BRANCH folder\e[0m" && \
+
+    if [[ "$BRANCH" == "master" ]]
+    then
+        cd "/home/ec2-user/tmp/build_$BRANCH/Gan-Shmuel/" 
+    else
+        cd "/home/ec2-user/tmp/build_$BRANCH/Gan-Shmuel/$BRANCH" 
+    fi    
+
+    echo -e "\e[1;36m[+] Chechout for $BRANCH branch\e[0m" && \
+    git checkout "$BRANCH" "--" && \
+
+    echo -e "\e[1;36m[+] Building up $BRANCH service\e[0m" && \
+
+    export TAG="$SHA" && \
+
+    if [ "${BRANCH}" = "master" ]   ## PRODUCTION
+    then
+        merge_prod
+    else                            ## STAGING
+        commit_staging
+    fi
+}
+
+
+## MAIN
+
+echo -e "\e[1;31m\t Trying to building up service\e[0m"
+cleanup
+
+echo -e "\e[1;31m\t Start Building up service\e[0m"
+echo
+echo -e "\e[1;36m[+] Setting up Job Control\e[0m" 
+set -m
+
+pipeline
+
+cleanup
+
+echo -e "\e[1;36m[+] Exiting chroot\e[0m" && \
+exit

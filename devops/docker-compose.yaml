@@ -1,0 +1,19 @@
+version: '3.8'
+
+services: 
+  ci-service:
+    image: ci-server
+    build: .
+    privileged: true
+    network_mode: host
+    pid: "host"
+    ipc: host
+    volumes:
+        - /:/host
+    # ports: 
+    #     - 80:5000
+    environment: 
+        PORT: 80
+        DEBUG: "True"
+        GIT_PYTHON_REFRESH: quiet
+    restart: unless-stopped    

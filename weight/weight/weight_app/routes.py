@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import request, jsonify
 import mysql.connector
 from . import weight_app
-from .POSTweight import POSTweight
+# from .POSTweight import POSTweight
 from .GETweight import GETweight
 from .db_module import DB_Module
 import json, csv
@@ -52,10 +52,10 @@ def get_session(id="<id>"):
         query = f"select direction from sessions where id={id}"
         data = db.fetch_new_data(query)
         for item in data:
-            if item['direction'] == 'out':
-                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.bruto-t1.neto AS 'truckTara', t1.neto, t1.products_id FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
+            if item == 'out':
+                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.bruto-t1.neto AS 'truckTara' t1.neto FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
             else:
-                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.products_id FROM sessions t1, \
+                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto FROM sessions t1, \
                     trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         data = db.fetch_new_data(select_query)
         session = []
@@ -74,14 +74,12 @@ def GETweight_startup():
     to_time = request.args.get('to', default = currenttime, type = str)
     filter_type = request.args.get('filter', default = '*', type = str)
     return GETweight(from_time,to_time,filter_type)
-#=======================
-#=======================
 
-@weight_app.route('/item')
+@weight_app.route('/item',methods=['GET'])
 def get_only_item():
     return "Hello from Item!"
 @weight_app.route('/item/<item_id>', methods=['GET'])
-def get_item(item_id):
+def get_item(item_id):#author: Niv Yohanok
 
     from_time = request.args.get('from')
     to_time = request.args.get('to')
@@ -118,23 +116,27 @@ def get_item(item_id):
     return jsonify(session)
 
 @weight_app.route('/batch-weight', methods=['POST'])
-def batch_weight():
+def batch_weight():#author: Niv Yohanok
 
-    filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers2.csv'
-    # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers3.json'
+    filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight/weight_app/in/containers1.csv'
+    # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight/weight_app/in/containers3.json'
+    #filepath for testing purposes
     query_list = []
     data = []
     is_csv = False
-    
-    try: 
-        db = DB_Module ()
-        data = db.fetch_new_data(query)
-    except:
-        return "Failed to connect to database"
-        
+
     with open(filepath,'r') as my_file: #case if it's JSON
         try:
             data = json.load(my_file)
+            for line in data:
+                _id = line['id']
+                weight = line['weight']
+                unit = line['unit']
+                
+                query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
+                query_list.append(query)
+                print('json queries is a success')
+
         except:
             is_csv = True
 
@@ -149,10 +151,16 @@ def batch_weight():
 
                 query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
                 query_list.append(query)
-    
     #execute queries
+    for line in query_list:
+        print(line)
+    try:
+        db = DB_Module ()
+        # db.insert_new_data(query_list)
+    except:
+        print('no connection to db')
 
-    return "FUCK"
+    return "if you read this it means something went right"
 
 @weight_app.route('/unknown', methods=['GET'])
 def unknown_weight():

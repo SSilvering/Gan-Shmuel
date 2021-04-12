@@ -24,6 +24,9 @@ def put_collection(id):
     found_id = helper.get_one(Provider, id=id)
     if found_id is None:
         return "the <id> sent isn't related to any existing entry on the server\n", 406
+
+    if helper.get_one(Provider, name=new_name):
+        return "new Provider name already Exists\n", 400
     found_id.name = new_name
     helper.commit_changes()
     return "", 200

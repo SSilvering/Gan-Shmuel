@@ -44,5 +44,5 @@ class MyTest(TestCase):
             db.drop_all()
 
 
-print("hello world")
-test = MyTest()
+if __name__ == '__main__':
+    test = MyTest()

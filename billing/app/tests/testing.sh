@@ -9,15 +9,18 @@ chmod u+x ./get_test.bash
 #./get_test.bash
 #[ $(echo "$?") -eq 1 ] && exit 1
 
+
+chmod u+x ./post_rates_test.py
+chmod u+x ./put_truck_test.py
 cd ../../
 
 echo "testing post/rates"
-chmod u+x ./post_rates_test.py
 python3 -m app.tests.post_rates_test
 [ $(echo "$?") -eq 1 ] && exit 1
+
 echo "testing put/truck"
-chmod u+x ./put_truck_test.py
 python -m app.tests.put_truck_test
 [ $(echo "$?") -eq 1 ] && exit 1
 
 exit 0
+

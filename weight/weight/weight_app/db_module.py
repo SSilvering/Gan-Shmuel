@@ -35,10 +35,11 @@ class DB_Module(object):
 
         return rows_list
 
-    def insert_new_data(self,QUERY):
+    def insert_new_data(self,query,values):
         conn = self.getConnection()
         cur = conn.cursor()
 
-        for query in QUERY:
-            cur.execute(query)
+        for index in range(0,len(values)):
+            cur.execute(query,values[index])
         conn.commit()
+

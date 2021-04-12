@@ -1,21 +1,20 @@
-from weight_app import weight_app, requests, GETweight, POSTweight, GETunknown, GETitem, GEThealth
+from weight_app import weight_app, requests, GETweight, POSTweight, GETunknown, GETitem, GEThealth, GETsession, POSTbatch_weight
 from time import gmtime, strftime
-from datetime import datetime
-from flask import request, jsonify
-import mysql.connector
+from flask import request, render_template
 from . import weight_app
 from .POSTweight import POSTweight
 from .GETweight import GETweight
 from .GETitem import GETitem
 from .GEThealth import GEThealth
 from .GETunknown import unknown_func
+from .GETsession import GETsession
 from .db_module import DB_Module
-import json, csv
+from .POSTbatch_weight import POSTbatch_weight
 
 @weight_app.route('/')
 @weight_app.route('/index')
 def index():
-    return "Hello, World!"
+    return render_template('index.html')
 
 @weight_app.route('/health', methods=['GET'])
 def health_check():
@@ -40,29 +39,7 @@ def check_sesion():
 
 @weight_app.route("/session/<id>")
 def get_session(id="<id>"):
-    if id is not None:
-        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, \
-            CASE WHEN t1.direction = 'out' then (select t1.bruto-t1.neto AS 'truckTara' FROM sessions t1, \
-                trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid ) end tara, t1.neto FROM \
-                sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
-        
-        db = DB_Module ()
-        query = f"select direction from sessions where id={id}"
-        data = db.fetch_new_data(query)
-        for item in data:
-            if item['direction'] == 'out':
-                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.bruto-t1.neto AS 'truckTara', t1.neto, t1.products_id FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
-            else:
-                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.products_id FROM sessions t1, \
-                    trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
-        data = db.fetch_new_data(select_query)
-        session = []
-        #for ind in range(0, len(data)):
-        for res in data:
-            session.append(res)
-        return jsonify(session)
-        
-    return "provide a truck ID"
+    return GETsession(id)
 
 @weight_app.route('/weight', methods=['GET'])
 def GETweight_route():
@@ -72,10 +49,8 @@ def GETweight_route():
     to_time = request.args.get('to', default = currenttime, type = str)
     filter_type = request.args.get('filter', default = '*', type = str)
     return GETweight(from_time,to_time,filter_type)
-#=======================
-#=======================
 
-@weight_app.route('/item')
+@weight_app.route('/item',methods=['GET'])
 def get_only_item():
     return "Hello from Item!"
 @weight_app.route('/item/<item_id>', methods=['GET'])
@@ -85,41 +60,10 @@ def GETitem_route(item_id):
     return GETitem(item_id,from_time,to_time)
 
 @weight_app.route('/batch-weight', methods=['POST'])
-def batch_weight():
+def batch_weight():#author: Niv Yohanok
 
-    filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers2.csv'
-    # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers3.json'
-    query_list = []
-    data = []
-    is_csv = False
-    
-    try: 
-        db = DB_Module ()
-        data = db.fetch_new_data(query)
-    except:
-        return "Failed to connect to database"
-        
-    with open(filepath,'r') as my_file: #case if it's JSON
-        try:
-            data = json.load(my_file)
-        except:
-            is_csv = True
-
-    
-    if is_csv: #case if it's CSV
-        with open(filepath,'r') as csv_file:
-            reader = csv.DictReader(csv_file)
-            for line in reader:
-                _id = list(line.values())[0]
-                weight = list(line.values())[1]
-                unit = list(line.keys())[1]
-
-                query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
-                query_list.append(query)
-    
-    #execute queries
-
-    return "FUCK"
+    filename = request.args.get('filename')
+    return POSTbatch_weight(filename)
 
 @weight_app.route('/unknown', methods=['GET'])
 def unknown_weight():

@@ -112,18 +112,6 @@ CREATE TABLE `sessions` (
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS `containers_has_sessions`;
-CREATE TABLE `containers_has_sessions` (
-  `containers_id` varchar(45) NOT NULL,
-  `sessions_id` int(11) NOT NULL,
-  PRIMARY KEY (`containers_id`,`sessions_id`),
-  KEY `fk_containers_has_sessions_sessions1_idx` (`sessions_id`),
-  KEY `fk_containers_has_sessions_containers1_idx` (`containers_id`),
-  CONSTRAINT `fk_containers_has_sessions_containers1` FOREIGN KEY (`containers_id`) REFERENCES `containers` (`id`),
-  CONSTRAINT `fk_containers_has_sessions_sessions1` FOREIGN KEY (`sessions_id`) REFERENCES `sessions` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 INSERT INTO `trucks` (`id`, `truckid`) VALUES (1, 'none');
 
 INSERT INTO providers (providername) VALUES ('Tapuzina');
@@ -151,7 +139,6 @@ INSERT INTO trucks (truckid,providerid,weight,unit) VALUES ('66666',2,120,'kg');
 INSERT INTO trucks (truckid,providerid,weight,unit) VALUES ('99888',1,999,'lbs');
 INSERT INTO trucks (truckid,providerid,weight,unit) VALUES ('66321',3,741,'kg');
 INSERT INTO trucks (truckid,providerid,weight,unit) VALUES ('12365',4,854,'lbs');
-
 
 INSERT INTO sessions (direction, f, date, bruto, neto, trucks_id, products_id, containers) VALUES ('in', 1, '20181218181512', 999, 800, 77777, 2, 'K-7845');
 INSERT INTO sessions (direction, f, date, bruto, neto, trucks_id, products_id, containers) VALUES ('in', 1, '20161218181512', 120, 100, 99888, 1, 'K-7845');

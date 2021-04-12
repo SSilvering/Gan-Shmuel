@@ -21,8 +21,7 @@ def GETweight(from_time,to_time,filter_type):
     #time_format yyyymmddhhmmss
     mydb = DB_Module()
     session_list = []
-    sql_string = "SELECT id,direction,bruto,neto,products_id FROM sessions WHERE date BETWEEN %s AND %s" % (from_time,to_time)
-    #sql_string = "SELECT id,direction,bruto,neto,products_id, containers FROM sessions WHERE date BETWEEN %s AND %s" % (from_time,to_time)
+    sql_string = "SELECT id,direction,bruto,neto,products_id, containers FROM sessions WHERE date BETWEEN %s AND %s" % (from_time,to_time)
     if filter_type=="in" or filter_type=="out":
         sql_string+=" AND direction='%s'" % filter_type
     sql_string+=";"
@@ -35,8 +34,6 @@ def GETweight(from_time,to_time,filter_type):
         product_name_from_db = mydb.fetch_new_data("SELECT product_name FROM products WHERE id = %d" % products_id)
         product_name = json.dumps(product_name_from_db, indent = 2)
         direction = str(myresults[ind]["direction"])
-        containers_list_from_db_list = mydb.fetch_new_data("SELECT containers_id FROM containers_has_sessions WHERE sessions_id = %d" % id)
-        containers = json.dumps(containers_list_from_db_list, indent = 2)
-        #containers = str(myresults[ind]["containers"])
+        containers = str(myresults[ind]["containers"])
         session_list.append( session(id, direction, bruto, neto, product_name, containers) )
     return json.dumps(myresults, indent = 7)

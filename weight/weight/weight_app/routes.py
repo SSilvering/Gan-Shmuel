@@ -5,10 +5,9 @@ from flask import request, jsonify
 import mysql.connector
 from . import weight_app
 from .POSTweight import POSTweight
-#from get_weight import get_weight
 from .GETweight import GETweight
 from .db_module import DB_Module
-import json
+import json, csv
 
 @weight_app.route('/')
 @weight_app.route('/index')
@@ -132,31 +131,7 @@ def batch_weight():
         data = db.fetch_new_data(query)
     except:
         return "Failed to connect to database"
-@weight_app.route('/unknown', methods=['GET'])
-def unknown_weight():
-    data=""
-    print("in fanc")
-    query=""
-    try:
-        db = DB_Module ()
-       
-    except:
-        print("my sql has failed for some weird reason :(")
-    print("connected")
-    #id_container = []
-    try:
         
-        query= f"SELECT distinct id FROM containers WHERE weight IS NULL"
-        data = db.fetch_new_data(query) #sent to db the object querry and read it fadi make it =]
-        
-        return ' '.join([str(elem) for elem in data])
-        
-    except:
-        print("my sql has failed for some weird reason :(")
-    return data
-
-
-
     with open(filepath,'r') as my_file: #case if it's JSON
         try:
             data = json.load(my_file)
@@ -178,3 +153,22 @@ def unknown_weight():
     #execute queries
 
     return "FUCK"
+
+@weight_app.route('/unknown', methods=['GET'])
+def unknown_weight():
+    query= "SELECT distinct id FROM containers WHERE weight IS NULL"
+    try:
+        db = DB_Module ()
+       
+    except:
+        print("my sql has failed for some weird reason :(")
+    print("connected")
+    #id_container = []
+    try:
+        data = db.fetch_new_data(query) #sent to db the object querry and read it fadi make it =]
+        
+        return ' '.join([str(elem) for elem in data])
+        
+    except:
+        print("my sql has failed for some weird reason :("), quit()
+    return "no unkown weights"

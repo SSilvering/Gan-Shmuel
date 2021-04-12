@@ -1,7 +1,4 @@
-#create a servece of mysql
-
 version: "2.1"
-#version: "3.8"
 services: 
   db: 
     image: mysql
@@ -14,9 +11,9 @@ services:
       
     healthcheck:
         test: "/usr/bin/mysql --user=root --password=$$MYSQL_ROOT_PASSWORD --execute \"SHOW DATABASES;\""
-        interval: 5s
-        timeout: 120s
-        retries: 100
+        interval: 12s
+        timeout: 180s
+        retries: 120
     
   app:
     image: "weight:${TAG}" 

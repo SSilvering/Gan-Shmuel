@@ -42,5 +42,3 @@ class DB_Module(object):
         for query in QUERY:
             cur.execute(query)
         conn.commit()
-
-    #def update_table(self,QUERY):

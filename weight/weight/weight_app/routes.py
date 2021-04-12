@@ -1,4 +1,4 @@
-from weight_app import weight_app, requests, GETweight, POSTweight, GETunknown
+from weight_app import weight_app, requests, GETweight, POSTweight, GETunknown, GETitem, GEThealth
 from time import gmtime, strftime
 from datetime import datetime
 from flask import request, jsonify
@@ -6,6 +6,8 @@ import mysql.connector
 from . import weight_app
 from .POSTweight import POSTweight
 from .GETweight import GETweight
+from .GETitem import GETitem
+from .GEThealth import GEThealth
 from .GETunknown import unknown_func
 from .db_module import DB_Module
 import json, csv
@@ -18,15 +20,7 @@ def index():
 @weight_app.route('/health', methods=['GET'])
 def health_check():
     #a tuple of the all the apis that will be used in the project 
-    api_tuple = ("index","batch-weight","unknown","item","session","post","weight")
-    for item in api_tuple:
-        uri = f"http://localhost:8080/{item}"
-        req = requests.get(uri)
-        print(req.status_code)
-        if req.status_code < 200 or req.status_code > 299:
-            res = f"APP api-{item} Status is {req.status_code}"
-            return res
-    return f"APP status is {req.status_code}"
+    return GEThealth()
 
 @weight_app.route('/weight', methods=['POST'])
 def post_weight():
@@ -71,7 +65,7 @@ def get_session(id="<id>"):
     return "provide a truck ID"
 
 @weight_app.route('/weight', methods=['GET'])
-def GETweight_startup():
+def GETweight_route():
     currenttime = strftime("%Y%m%d%H%M%S", gmtime())
     start_of_day = strftime("%Y%m%d000000", gmtime())
     from_time = request.args.get('from', default = start_of_day, type = str)
@@ -85,41 +79,10 @@ def GETweight_startup():
 def get_only_item():
     return "Hello from Item!"
 @weight_app.route('/item/<item_id>', methods=['GET'])
-def get_item(item_id):
-
+def GETitem_route(item_id):
     from_time = request.args.get('from')
     to_time = request.args.get('to')
-
-    data = []
-    session = { #basic mold for the return object
-        "id":int(item_id),
-        "tara":0,
-        "sessions":[]
-    }
-
-    if not from_time: #default cases for time 
-        from_time = datetime.now().strftime("%Y%m01000000")
-    if not to_time:
-        to_time = datetime.now().strftime("%Y%m%d%H%M%S")
-
-    query = f"SELECT bruto,neto,id,date FROM sessions WHERE id={item_id} AND date BETWEEN {from_time} AND {to_time}"
-
-    try:
-        db = DB_Module ()
-        data = db.fetch_new_data(query)
-    except:
-        print ("mysql has failed to reach the server..")
-
-    
-    if not data: #error case 
-        session["id"] = 404,
-        session["tara"] = 'N/A'
-
-    for ind in range(0, len(data)):
-        session["tara"] += float(data[ind]["bruto"]) - float(data[ind]["neto"])
-        session["sessions"].append(data[ind]["id"])
-
-    return jsonify(session)
+    return GETitem(item_id,from_time,to_time)
 
 @weight_app.route('/batch-weight', methods=['POST'])
 def batch_weight():

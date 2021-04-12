@@ -12,7 +12,7 @@ class TruckTest(TestCase):
     TESTING = True
 
     def create_app(self):
-        self.app = create_app(f'{path.dirname(path.realpath(__file__))}/settings.py')
+        self.app = create_app(path.dirname(path.realpath(__file__))+'/settings.py')
         return self.app
         # return create_app(config_file=f'{path.dirname(path.realpath(__file__))}/settings.py')
 

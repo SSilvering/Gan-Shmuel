@@ -1,7 +1,7 @@
 from weight_app import weight_app, requests, GETweight, POSTweight
 from time import gmtime, strftime
 from datetime import datetime
-from flask import request, jsonify
+from flask import request, jsonify,render_template
 import mysql.connector
 from . import weight_app
 # from .POSTweight import POSTweight
@@ -12,11 +12,11 @@ import json, csv
 @weight_app.route('/')
 @weight_app.route('/index')
 def index():
-    return "Hello, World!"
+    return render_template('index.html')
 
 @weight_app.route('/health', methods=['GET'])
 def health_check():
-    #a tuple of the all the apis that will be used in the project 
+    #a tuple of the all the apis that will be used in the project
     api_tuple = ("index","batch-weight","unknown","item","session","post","weight")
     for item in api_tuple:
         uri = f"http://localhost:8080/{item}"
@@ -47,7 +47,7 @@ def get_session(id="<id>"):
             CASE WHEN t1.direction = 'out' then (select t1.bruto-t1.neto AS 'truckTara' FROM sessions t1, \
                 trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid ) end tara, t1.neto FROM \
                 sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
-        
+
         db = DB_Module ()
         query = f"select direction from sessions where id={id}"
         data = db.fetch_new_data(query)
@@ -63,7 +63,7 @@ def get_session(id="<id>"):
         for res in data:
             session.append(res)
         return jsonify(session)
-        
+
     return "provide a truck ID"
 
 @weight_app.route('/weight', methods=['GET'])
@@ -91,7 +91,7 @@ def get_item(item_id):#author: Niv Yohanok
         "sessions":[]
     }
 
-    if not from_time: #default cases for time 
+    if not from_time: #default cases for time
         from_time = datetime.now().strftime("%Y%m01000000")
     if not to_time:
         to_time = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -104,8 +104,8 @@ def get_item(item_id):#author: Niv Yohanok
     except:
         print ("mysql has failed to reach the server..")
 
-    
-    if not data: #error case 
+
+    if not data: #error case
         session["id"] = 404,
         session["tara"] = 'N/A'
 
@@ -118,65 +118,64 @@ def get_item(item_id):#author: Niv Yohanok
 @weight_app.route('/batch-weight', methods=['POST'])
 def batch_weight():#author: Niv Yohanok
 
-    filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight/weight_app/in/containers1.csv'
-    # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight/weight_app/in/containers3.json'
-    #filepath for testing purposes
+    filename = request.args.get('filename')
+    filepath = f'./weight_app/in/{filename}'
     query_list = []
-    data = []
+
+    # data = []
     is_csv = False
+    query = f"INSERT INTO containers (id,weight,unit) VALUES (%s,%s,%s)"
 
     with open(filepath,'r') as my_file: #case if it's JSON
         try:
             data = json.load(my_file)
             for line in data:
+
                 _id = line['id']
                 weight = line['weight']
                 unit = line['unit']
-                
-                query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
-                query_list.append(query)
-                print('json queries is a success')
+                values = (_id, weight,unit)
+
+                query_list.append(values)
 
         except:
             is_csv = True
 
-    
+
     if is_csv: #case if it's CSV
         with open(filepath,'r') as csv_file:
             reader = csv.DictReader(csv_file)
             for line in reader:
+
                 _id = list(line.values())[0]
                 weight = list(line.values())[1]
                 unit = list(line.keys())[1]
+                values = (_id, weight,unit)
 
-                query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
-                query_list.append(query)
-    #execute queries
-    for line in query_list:
-        print(line)
-    try:
-        db = DB_Module ()
-        # db.insert_new_data(query_list)
-    except:
-        print('no connection to db')
+                query_list.append(values)
 
-    return "if you read this it means something went right"
+    retrived = ''
+    db = DB_Module ()
+    db.insert_new_data(query,query_list)
+    retrived = db.fetch_new_data('SELECT * FROM containers')
+
+    return jsonify(retrived)
 
 @weight_app.route('/unknown', methods=['GET'])
 def unknown_weight():
     query= "SELECT distinct id FROM containers WHERE weight IS NULL"
     try:
         db = DB_Module ()
-       
+
     except:
         print("my sql has failed for some weird reason :(")
     print("connected")
     #id_container = []
     try:
         data = db.fetch_new_data(query) #sent to db the object querry and read it fadi make it =]
-        
+
         return ' '.join([str(elem) for elem in data])
-        
+
     except:
         print("my sql has failed for some weird reason :("), quit()
     return "no unkown weights"

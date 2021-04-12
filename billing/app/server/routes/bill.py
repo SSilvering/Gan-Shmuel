@@ -49,7 +49,7 @@ def bill(id):
 			return "wrong datetime value"
 
 	mocked_json = json.dumps({
-        "id": 'BAD RESPONSE FROM WEIGTH SERVER',
+        "id": 'BAD RESPONSE FROM WEIGHT SERVER',
         "name": provider.name,
         "from": from_arg,
         "to": to_arg,

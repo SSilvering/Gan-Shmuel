@@ -27,21 +27,9 @@ def put_collection(id):
     return "", 200
 
 
-# @provider_blueprint.route("/provider", methods=['POST'])
-# def provider():
-#     args = request.json
-#     name = args.get("provider")
-#     found_name = helper.get_one(Provider, name=name)
-#     if found_name:
-#         return "", 200
-#     else:
-#         return create_id(name), 200
-
-
 @provider_blueprint.route("/provider", methods=['POST'])
 def provider():
-    name = request.args.get('name')
-
+    name = (request.form and request.form["name"]) or (request.json and request.json.get("name"))
     if not name:
         return 'Bad parameters, expected {"name":"<name>"}\n', 400
 

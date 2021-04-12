@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from app.server.db.extensions import db  # importing db=sqlalchny()
@@ -40,9 +42,10 @@ def put_collection(id):
 
 @provider_blueprint.route("/provider", methods=['POST'])
 def provider():
-    name = request.args.get('name')
+    try:
+        name = json.loads(request.data)['name']
 
-    if not name:
+    except (TypeError, KeyError):
         return 'Bad parameters, expected {"name":"<name>"}\n', 400
 
     found_name = helper.get_one(Provider, name=name)

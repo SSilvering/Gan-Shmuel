@@ -132,6 +132,30 @@ def batch_weight():
         data = db.fetch_new_data(query)
     except:
         return "Failed to connect to database"
+@weight_app.route('/unknown', methods=['GET'])
+def unknown_weight():
+    data=""
+    print("in fanc")
+    query=""
+    try:
+        db = DB_Module ()
+       
+    except:
+        print("my sql has failed for some weird reason :(")
+    print("connected")
+    #id_container = []
+    try:
+        
+        query= f"SELECT distinct id FROM containers WHERE weight IS NULL"
+        data = db.fetch_new_data(query) #sent to db the object querry and read it fadi make it =]
+        
+        return ' '.join([str(elem) for elem in data])
+        
+    except:
+        print("my sql has failed for some weird reason :(")
+    return data
+
+
 
     with open(filepath,'r') as my_file: #case if it's JSON
         try:

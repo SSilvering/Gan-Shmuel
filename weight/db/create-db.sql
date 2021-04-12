@@ -58,7 +58,7 @@ USE `weight_testing_db`;
 DROP TABLE IF EXISTS `containers`;
 CREATE TABLE `containers` (
   `id` varchar(45) NOT NULL,
-  `weight` float NOT NULL,
+  `weight` float,
   `unit` enum('kg','lbs') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
@@ -135,6 +135,7 @@ INSERT INTO containers (id,weight,unit) VALUES ('K-7854',854,'lbs');
 INSERT INTO containers (id,weight,unit) VALUES ('K-6523',741,'kg');
 INSERT INTO containers (id,weight,unit) VALUES ('K-2369',120,'kg');
 INSERT INTO containers (id,weight,unit) VALUES ('K-7845',999,'lbs');
+INSERT INTO containers (id,weight,unit) VALUES ('K-7847',NULL,'lbs');
 
 INSERT INTO products (product_name,rate,scope) VALUES ('Blood',122,'ALL');
 INSERT INTO products (product_name,rate,scope) VALUES ('Mandarin',103,'ALL');

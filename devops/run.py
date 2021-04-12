@@ -43,15 +43,6 @@ def hook():
                     if up_container(branch, sha, port=ports.get(branch+'_stg'), flag=flags.get('commit')):
                         return Response(status=200)
 
-        # elif data.get("action") == "opened":    ## PULL REQUEST
-
-        #     branch = data.get("pull_request", {}).get("head", {}).get("ref")
-        #     sha = data.get("pull_request", {}).get("head", {}).get("sha")
-
-        #     if branch in branches:                
-        #         if up_container(branch, sha,port=ports.get("test_port"), flag=flags.get('push')):
-        #             return Response(status=200)
-
     return Response(status=400)
 
 

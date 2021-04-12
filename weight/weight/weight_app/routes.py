@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import request, jsonify,render_template
 import mysql.connector
 from . import weight_app
-# from .POSTweight import POSTweight
+from .POSTweight import POSTweight
 from .GETweight import GETweight
 from .db_module import DB_Module
 import json, csv

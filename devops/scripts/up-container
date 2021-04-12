@@ -8,12 +8,17 @@ FLAG=$4
 BILLING_TESTS=/home/ec2-user/tmp/build_${BRANCH}/Gan-Shmuel/billing/app/tests/testing.sh
 WEIGHT_TESTS=/home/ec2-user/tmp/build_${BRANCH}/Gan-Shmuel/weight/tests/testing.sh
 
+# ports = $(echo $PORT | tr " " "\n")  # check it syntax
+# billing_port = ${ports[0]}
+# weight_port = ${ports[1]}
+
 echo "$BRANCH"
 echo "$SHA"
-echo "$PORT"
+echo "$PORTXT"
 echo "$FLAG"
 
 cleanup() {
+    echo -e "\e[1;36m[+] Removing folder\e[0m"
     rm -rf "/home/ec2-user/tmp/build_$BRANCH/"
 }
 
@@ -25,12 +30,17 @@ merge_prod() {
     cd "billing/" && \
     docker-compose up -d --build && \
 
-    CHECK=$("$BILLING_TESTS")
-    if [ "$CHECK" ]
-    then
+    if "$BILLING_TESTS"; then
         export PORT=8082
-        docker-compose up -d --force-recreate
+        docker-compose up -d --force-recreate && \
         echo "Last commit of billing service in on production"
+        echo
+    else
+        echo "Rejected! Last commit of billing didnt pass test."
+        echo    
+        docker-compose down
+        cleanup
+        exit
     fi
     
     export PORT=8085
@@ -38,12 +48,17 @@ merge_prod() {
     cd "../weight/" && \
     docker-compose up -d --build && \
 
-    CHECK=$("$WEIGHT_TESTS")
-    if [ "$CHECK" ]
-    then
+    if "$WEIGHT_TESTS"; then
         export PORT=8084
-        docker-compose up -d --force-recreate
+        docker-compose up -d --force-recreate && \
         echo "Last commit of weight service in on production"
+        echo
+    else
+        echo "Rejected! Last commit of weight didnt pass test."
+        echo 
+        docker-compose down
+        cleanup
+        exit
     fi
 }
 
@@ -109,7 +124,6 @@ set -m
 
 pipeline
 
-echo -e "\e[1;36m[+] Removing folder\e[0m"
 cleanup
 
 echo -e "\e[1;36m[+] Exiting chroot\e[0m" && \

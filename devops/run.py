@@ -6,8 +6,8 @@ import subprocess
 
 # logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
-branches = ['billing', 'weight', 'master']
-ports = {'weight_prod': '8084', 'weight_stg': '8083', 'billing_prod': '8082', 'billing_stg': '8081'}
+branches = ['billing', 'weight']
+ports = {'weight_prod': '8084', 'weight_stg': '8083', 'billing_prod': '8082', 'billing_stg': '8081', 'test_port': '8085'}
 flags = {'commit': 'commit', 'test': 'test', 'commit': 'commit'}
 app = Flask(__name__)
 
@@ -33,29 +33,31 @@ def hook():
             branch = data.get("ref").split("/")[2]
             sha = data.get("after")
 
-            if branch in branches:
-                if up_container(branch, sha, port=None, flag=flags.get('commit')):
+            if branch in branches:              ## STAGING
+                if up_container(branch, sha, port=ports.get(branch+'_stg'), flag=flags.get('commit')):
                     return Response(status=200)
 
-        elif data.get("action") == "opened":
+        elif data.get("action") == "opened":    ## TESTING
             branch = data.get("pull_request", {}).get("head", {}).get("ref")
             sha = data.get("pull_request", {}).get("head", {}).get("sha")
 
             if branch in branches:                
                 ## TODO: run tests on code, if it pass, approve PR and push to master
-                if up_container(branch, sha,port=ports.get(branch+'_stg'), flag=flags.get('test')):
+                if up_container(branch, sha,port=ports.get("test_port"), flag=flags.get('test')):
                     return Response(status=200)
+
 ## docker exec /app/testing.sh and see whats returns, if return OK, shuting down container and power it up on production mode (port 8082 or 8084 fit to the branch).
 ## if it fails, return 1 to flask and annonce the commiter.
+
         elif data.get("action") == "submitted":
-            branch = data.get("______", {}).get("head", {}).get("ref")
-            sha = data.get("_______", {}).get("head", {}).get("sha")
-            if branch == 'master':
-                if up_container(branch, sha, port=None, flag=flags.get('merge')):
-                    return Response(status=200)
+            branch = data.get("pull_request", {}).get("head", {}).get("ref")
+            sha = data.get("pull_request", {}).get("head", {}).get("sha")
+
+            if up_container(branch, sha, port=ports.get(branch+'_prod'), flag=flags.get('merge')):
+                return Response(status=200)
 
 
-    return Response(status=500, headers={"error":branch})
+    return Response(status=400)
 
 
 ## if billing push -> up container (staging)

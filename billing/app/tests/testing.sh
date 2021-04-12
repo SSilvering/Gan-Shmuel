@@ -21,7 +21,7 @@ python3 -m app.tests.post_rates_test
 [ $(echo "$?") -eq 1 ] && exit 1
 
 echo "testing put/truck"
-python -m app.tests.put_truck_test
+python3 -m app.tests.put_truck_test
 [ $(echo "$?") -eq 1 ] && exit 1
 
 popd

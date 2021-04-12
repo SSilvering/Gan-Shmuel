@@ -76,7 +76,7 @@ def getTruckWeight(truckid, unit):
     sql_cur.execute(sql, values)
     res = sql_cur.fetchall()
     if not res:
-        return abort(404, "no trucks found {}".format(truckid))
+        abort(404, "no trucks found {}".format(truckid))
 
     output = np.sum(res)
     
@@ -86,108 +86,74 @@ def getTruckWeight(truckid, unit):
     return output
 
 def createSeasion(type, truck, containers, weight, unit, force, produce):
-    if type == "in":
-        sql = "SELECT direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
-        sql_cur.execute(sql, (truck, ))
-        res = sql_cur.fetchall()
-        fixed_str = np.squeeze(res)[()]
-        lastid = 0
-        if fixed_str == "in":
-            if force:
-                sql = "UPDATE `trucks` SET weight = %s WHERE truckid = %s"
-                values = (f"{weight}", f"{truck}")
-                sql_cur.execute(sql, values)
-                sql_db.commit()
-                print("update")
-            else:
-                abort(400, "force must be enabled for this action")
-    elif type == "out":
-        #sql = "SELECT * FROM `sessions` WHERE `trucks_id` = %s"
-        #values = (f"{truckid}", )
-        #sql_cur.execute(sql, values)
-        #res = sql_cur.fetchall()
-        #if not res:
-        #    return print("err")
+    update = False
 
-        sql = "SELECT direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
+    cont_weight = getContainersWeight(containers, unit)
+    truck_weight = getTruckWeight(truck, unit)
+    neto = round(weight - truck_weight - cont_weight)
+    trucktara = weight - neto
+    lastid = 0
+
+    if type == "in":
+        sql = "SELECT id,direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
         sql_cur.execute(sql, (truck, ))
-        res = sql_cur.fetchall()
-        fixed_str = np.squeeze(res)[()]
-        lastid = sql_cur.lastrowid
-        if res == "out":
-            if force:
-                sql = "UPDATE `trucks` SET weight = %s WHERE truckid = %s"
-                values = (f"{weight}", f"{truck}")
-                sql_cur.execute(sql, values)
-                sql_db.commit()
-                #print("update")
-            else:
-                abort(400, "force must be enabled for this action")
-        else:
-            abort(404, "'in' session not found")
+        if sql_cur.rowcount == 0:
+            res = sql_cur.fetchall()
+            for result in res:
+                lastid = result[0]
+                fixedstring = result[1]
+            if fixedstring == "in":
+                if force:
+                    sql = "UPDATE `trucks` SET weight = %s WHERE truckid = %s"
+                    values = (f"{trucktara}", f"{truck}")
+                    sql_cur.execute(sql, values)
+                    sql_db.commit()
+                    update = True
+                else:
+                    abort(400, "force must be enabled for this action")
+    elif type == "out":
+        sql = "SELECT id,direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
+        sql_cur.execute(sql, (truck, ))
+        if sql_cur.rowcount == 0:
+            res = sql_cur.fetchall()
+            for result in res:
+                lastid = result[0]
+                fixedstring = result[1]
+            if fixedstring == "out":
+                if force:
+                    sql = "UPDATE `trucks` SET weight = %s WHERE truckid = %s"
+                    values = (f"{trucktara}", f"{truck}")
+                    sql_cur.execute(sql, values)
+                    sql_db.commit()
+                    update = True
+                else:
+                    abort(400, "force must be enabled for this action")
+        else: # if out witout in
+            abort(400, "cannot create session without in")
     elif type == "none":
         sql = "SELECT direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
         sql_cur.execute(sql, (truck, ))
         res = sql_cur.fetchall()
         fixed_str = np.squeeze(res)[()]
-        if res == "in":
-            abort(400, "none after in cannot be executed")
+        if fixed_str == "in":
+            abort(400, "'in' cannot be after 'none'")
 
     currenttime = strftime("%Y%m%d%H%M%S", gmtime())
-    truck_weight = getTruckWeight(truck, unit)
-    cont_weight = getContainersWeight(containers, unit)
-    neto = round(weight - truck_weight - cont_weight)
-    sql = "INSERT INTO `sessions` (direction, f, date, bruto, neto, trucks_id, products_id) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    values = (f"{type}", f"{force}", f"{currenttime}", f"{weight}", f"{neto}", f"{truck}", f"{produce}")
-    #print(values)
-    sql_cur.execute(sql, values)
-    sql_db.commit()
+    if not update:
+        sql = "INSERT INTO `sessions` (direction, f, date, bruto, neto, trucks_id, products_id, containers) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        values = (f"{type}", f"{force}", f"{currenttime}", f"{weight}", f"{neto}", f"{truck}", f"{produce}", f"{containers}")
+        sql_cur.execute(sql, values)
+        sql_db.commit()
+        if type == "in" or type == "none":
+            lastid = sql_cur.lastrowid
+
     if type == "in" or type == "none":
         lastid = sql_cur.lastrowid
         return jsonify({'id': lastid, 'truck': truck, 'bruto': weight})
     elif type == "out":
-        return jsonify({'id': lastid, 'truck': truck, 'bruto': weight, 'truckTara': bruto - neto, 'neto': neto})
+        return jsonify({'id': lastid, 'truck': truck, 'bruto': weight, 'truckTara': trucktara, 'neto': neto})
 
 def POSTweight(direction, truck, containers, weight, weight_unit, force, produce):
     checkSyntax(direction, weight_unit, containers)
 
     return createSeasion(direction, truck, containers, weight, weight_unit, force, produce)
-    
-# ---------------------------[CSV FILE AS OUTPUT]---------------------------------------
-#def getContainer(containers, unit): # returns the total weight of all containers
-#    total = containers.count(',')
-#    if total:
-#        count = containers.split(',')
-#        for i in count:
-#            choosenCont.append(i)
-#    else:
-#        choosenCont.append(containers)
-#
-#    if unit == "kg":
-#        file_path = "weight_app/samples/containers1.csv"
-#        row = "kg"
-#    else:
-#        file_path = "weight_app/samples/containers2.csv"
-#        row = "lbs"
-#
-#    try: 
-#        with open (file_path) as csvfile:
-#            reader = csv.DictReader(csvfile)
-#            for rows in reader:
-#                cont_names.append(rows['id'])
-#                cont_weight.append(int(rows[row]))
-#    except:
-#        abort(404, "no containers output for choosen unit")
-#
-#    output = 0
-#    i = len(cont_names)
-#    for ids in range(i):
-#        if cont_names[ids] not in choosenCont:
-#            continue
-#        
-#        output += cont_weight[ids]
-#    
-#    if not output:
-#        abort(404, "no containers found {}".format(containers))
-#    
-#    return output

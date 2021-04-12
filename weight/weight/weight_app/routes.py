@@ -87,31 +87,70 @@ def get_item(item_id):
     from_time = request.args.get('from')
     to_time = request.args.get('to')
 
-    if not from_time:
+    data = []
+    session = { #basic mold for the return object
+        "id":int(item_id),
+        "tara":0,
+        "sessions":[]
+    }
+
+    if not from_time: #default cases for time 
         from_time = datetime.now().strftime("%Y%m01000000")
     if not to_time:
         to_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
-    print(from_time,to_time)
-    # query = f"select neto,bruto,id from sessions where date between {from_time} and {to_time}"
-    # query = f"select (neto,bruto,trucks_id) from sessions"
-    query = f"select bruto,neto,id from sessions where "
+    query = f"SELECT bruto,neto,id,date FROM sessions WHERE id={item_id} AND date BETWEEN {from_time} AND {to_time}"
 
     try:
         db = DB_Module ()
         data = db.fetch_new_data(query)
     except:
-        print("my sql has failed for some weird reason :(")
+        print ("mysql has failed to reach the server..")
 
-    session = {
-        "id":int(item_id),
-        "tara":0,
-        "sessions":[]
-    }
+    
+    if not data: #error case 
+        session["id"] = 404,
+        session["tara"] = 'N/A'
 
     for ind in range(0, len(data)):
         session["tara"] += float(data[ind]["bruto"]) - float(data[ind]["neto"])
         session["sessions"].append(data[ind]["id"])
 
     return jsonify(session)
-    # return get_sql(to_time,from_time,id)
+
+@weight_app.route('/batch-weight', methods=['POST'])
+def batch_weight():
+
+    filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers2.csv'
+    # filepath = '/home/niv/Documents/Gan-Shmuel/weight/weight_app/in/containers3.json'
+    query_list = []
+    data = []
+    is_csv = False
+    
+    try: 
+        db = DB_Module ()
+        data = db.fetch_new_data(query)
+    except:
+        return "Failed to connect to database"
+
+    with open(filepath,'r') as my_file: #case if it's JSON
+        try:
+            data = json.load(my_file)
+        except:
+            is_csv = True
+
+    
+    if is_csv: #case if it's CSV
+        with open(filepath,'r') as csv_file:
+            reader = csv.DictReader(csv_file)
+            for line in reader:
+                _id = list(line.values())[0]
+                weight = list(line.values())[1]
+                unit = list(line.keys())[1]
+
+                query = f"INSERT INTO containers (id,weight,unit) VALUES ({_id},{weight},{unit})"
+                query_list.append(query)
+    
+    #execute queries
+
+    return "FUCK"

@@ -8,14 +8,12 @@ from .POSTweight import POSTweight
 #from get_weight import get_weight
 from .GETweight import GETweight
 from .db_module import DB_Module
-
-
+import json
 
 @weight_app.route('/')
 @weight_app.route('/index')
 def index():
     return "Hello, World!"
-
 
 @weight_app.route('/health', methods=['GET'])
 def health_check():
@@ -30,7 +28,6 @@ def health_check():
             return res
     return f"APP status is {req.status_code}"
 
-
 @weight_app.route('/weight', methods=['POST'])
 def post_weight():
     direction = request.args.get('direction')
@@ -43,27 +40,32 @@ def post_weight():
 
     return POSTweight(direction, truck, containers, weight, weight_type, force, produce)
 
-@weight_app.route('/session')
-@weight_app.route('/session/<id>')
+@weight_app.route("/session")
+@weight_app.route("/session/<id>")
 def get_session(id="<id>"):
     if id is not None:
-        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.neto, t1.bruto-t1.neto AS 'truckTara', t2.weight FROM sessions t1, \
-            trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
-        db = DB_Module ()
+        select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, \
+            CASE WHEN t1.direction = 'out' then (select t1.bruto-t1.neto AS 'truckTara' FROM sessions t1, \
+                trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid ) end tara, t1.neto FROM \
+                sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         
+        db = DB_Module ()
+        query = f"select direction from sessions where id={id}"
+        data = db.fetch_new_data(query)
+        for item in data:
+            if item == 'out':
+                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto, t1.bruto-t1.neto AS 'truckTara' t1.neto FROM sessions t1, trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
+            else:
+                select_query = f"SELECT t1.id, t1.trucks_id, t1.bruto FROM sessions t1, \
+                    trucks t2 WHERE t1.id = {id} and t1.trucks_id = t2.truckid"
         data = db.fetch_new_data(select_query)
         session = []
         #for ind in range(0, len(data)):
-        session_res = json.dumps(data)
         for res in data:
-            for ind in range(0, len(data)):
-                tara = res[ind]['truckTara']
-                neto = res[ind]['neto']
-                session.append(tara, neto)
+            session.append(res)
         return jsonify(session)
         
     return "provide a truck ID"
-
 
 @weight_app.route('/weight', methods=['GET'])
 def GETweight_startup():
@@ -75,8 +77,6 @@ def GETweight_startup():
     return GETweight(from_time,to_time,filter_type)
 #=======================
 #=======================
-
-
 
 @weight_app.route('/item')
 def get_only_item():
@@ -115,6 +115,3 @@ def get_item(item_id):
 
     return jsonify(session)
     # return get_sql(to_time,from_time,id)
-
-
-    

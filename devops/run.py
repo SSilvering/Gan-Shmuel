@@ -8,7 +8,7 @@ import subprocess
 
 branches = ['billing', 'weight']
 ports = {'weight_prod': '8084', 'weight_stg': '8083', 'billing_prod': '8082', 'billing_stg': '8081', 'test_port': '8085'}
-flags = {'commit': 'commit', 'test': 'test', 'commit': 'commit'}
+flags = {'commit': 'commit', 'push': 'push'}
 app = Flask(__name__)
 
 
@@ -28,44 +28,31 @@ def hook():
         
         
         branch = ''
-        if data.get("ref"):
+        if data.get("ref"):          ## STAGING (if Master -> Run Testing)
 
             branch = data.get("ref").split("/")[2]
             sha = data.get("after")
 
-            if branch in branches:              ## STAGING
-                if up_container(branch, sha, port=ports.get(branch+'_stg'), flag=flags.get('commit')):
+            if branch == 'master':
+                temp_ports = ports.get('billing_prod') + ';' + ports.get('weight_prod') + ';' # Sent 2 ports
+                if up_container(branch, sha, port=temp_ports, flag=flags.get('commit')):
                     return Response(status=200)
+            else:
+                
+                if branch in branches:
+                    if up_container(branch, sha, port=ports.get(branch+'_stg'), flag=flags.get('commit')):
+                        return Response(status=200)
 
-        elif data.get("action") == "opened":    ## TESTING
-            branch = data.get("pull_request", {}).get("head", {}).get("ref")
-            sha = data.get("pull_request", {}).get("head", {}).get("sha")
+        # elif data.get("action") == "opened":    ## PULL REQUEST
 
-            if branch in branches:                
-                ## TODO: run tests on code, if it pass, approve PR and push to master
-                if up_container(branch, sha,port=ports.get("test_port"), flag=flags.get('test')):
-                    return Response(status=200)
+        #     branch = data.get("pull_request", {}).get("head", {}).get("ref")
+        #     sha = data.get("pull_request", {}).get("head", {}).get("sha")
 
-## docker exec /app/testing.sh and see whats returns, if return OK, shuting down container and power it up on production mode (port 8082 or 8084 fit to the branch).
-## if it fails, return 1 to flask and annonce the commiter.
-
-        elif data.get("action") == "submitted":
-            branch = data.get("pull_request", {}).get("head", {}).get("ref")
-            sha = data.get("pull_request", {}).get("head", {}).get("sha")
-
-            if up_container(branch, sha, port=ports.get(branch+'_prod'), flag=flags.get('merge')):
-                return Response(status=200)
-
+        #     if branch in branches:                
+        #         if up_container(branch, sha,port=ports.get("test_port"), flag=flags.get('push')):
+        #             return Response(status=200)
 
     return Response(status=400)
-
-
-## if billing push -> up container (staging)
-## elif billing PR -> up container and run docker-compose exec app/test
-## if  docker-compose exec app/test 0 -> turn down container
-## 
-## if pr approve and occurred merge to master -> up container on production port (billing 8082 and weight 8084)
-
 
 
 @app.route('/health', methods=['GET'])

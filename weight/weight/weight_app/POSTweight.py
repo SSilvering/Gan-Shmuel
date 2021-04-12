@@ -65,9 +65,9 @@ def getContainersWeight(containers, unit): # returns the total weight of all con
         abort(404, "no containers found {}".format(containers))
 
     if unit == "lbs":
-        output * 0.45359237 # convert LBS to KG
+        output *= 0.45359237 # convert LBS to KG
 
-    return output
+    return float(output)
 
 def getTruckWeight(truckid, unit):
     sql = "SELECT weight FROM `trucks` WHERE truckid = %s AND unit = %s"
@@ -81,20 +81,23 @@ def getTruckWeight(truckid, unit):
     output = np.sum(res)
     
     if unit == "lbs":
-        output * 0.45359237 # convert LBS to KG
+        output *= 0.45359237 # convert LBS to KG
 
-    return output
+    return float(output)
 
 def createSeasion(type, truck, containers, weight, unit, force, produce):
     update = False
 
     cont_weight = getContainersWeight(containers, unit)
     truck_weight = getTruckWeight(truck, unit)
-    neto = round(weight - truck_weight - cont_weight)
-    trucktara = weight - neto
     lastid = 0
-
+    fixedstring = ""
+    neto = 0
+    trucktara = 0
+    in_bruto = 0
     if type == "in":
+        neto = int(float(weight) - truck_weight - cont_weight)
+        trucktara = int(float(weight) - float(neto) - float(cont_weight))
         sql = "SELECT id,direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
         sql_cur.execute(sql, (truck, ))
         if sql_cur.rowcount == 0:
@@ -103,7 +106,7 @@ def createSeasion(type, truck, containers, weight, unit, force, produce):
                 lastid = result[0]
                 fixedstring = result[1]
             if fixedstring == "in":
-                if force:
+                if force=="1":
                     sql = "UPDATE `trucks` SET weight = %s WHERE truckid = %s"
                     values = (f"{trucktara}", f"{truck}")
                     sql_cur.execute(sql, values)
@@ -112,15 +115,23 @@ def createSeasion(type, truck, containers, weight, unit, force, produce):
                 else:
                     abort(400, "force must be enabled for this action")
     elif type == "out":
-        sql = "SELECT id,direction FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
+        sql = "SELECT id,direction,bruto FROM `sessions` WHERE trucks_id = %s ORDER BY id DESC LIMIT 1"
         sql_cur.execute(sql, (truck, ))
         if sql_cur.rowcount == 0:
             res = sql_cur.fetchall()
             for result in res:
+                in_bruto = result[2]
                 lastid = result[0]
                 fixedstring = result[1]
+            trucktara = int(weight) - int(cont_weight)
+            neto = int(int(in_bruto) - trucktara)
             if fixedstring == "out":
-                if force:
+                sql = "SELECT bruto FROM `sessions` WHERE trucks_id = %s AND direction = 'in' ORDER BY id DESC LIMIT 1"
+                sql_cur.execute(sql, (truck, ))
+                res = sql_cur.fetchone()
+                in_bruto = float(res[0])
+                trucktara = float(in_bruto) - float(cont_weight) - float(neto)
+                if force=="1":
                     sql = "UPDATE `trucks` SET weight = %s WHERE truckid = %s"
                     values = (f"{trucktara}", f"{truck}")
                     sql_cur.execute(sql, values)
@@ -137,7 +148,9 @@ def createSeasion(type, truck, containers, weight, unit, force, produce):
         fixed_str = np.squeeze(res)[()]
         if fixed_str == "in":
             abort(400, "'in' cannot be after 'none'")
-
+        else:
+            neto = int(float(weight) - truck_weight - cont_weight)
+            trucktara = int(float(weight) - float(neto))
     currenttime = strftime("%Y%m%d%H%M%S", gmtime())
     if not update:
         sql = "INSERT INTO `sessions` (direction, f, date, bruto, neto, trucks_id, products_id, containers) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
@@ -147,11 +160,15 @@ def createSeasion(type, truck, containers, weight, unit, force, produce):
         if type == "in" or type == "none":
             lastid = sql_cur.lastrowid
 
+    if unit == "lbs":
+        weight = float(weight) * 0.45359237 # convert LBS to KG
+        in_bruto = float(in_bruto) * 0.45359237 # convert LBS to KG
+        neto = float(neto) * 0.45359237 # convert LBS to KG
     if type == "in" or type == "none":
         lastid = sql_cur.lastrowid
         return jsonify({'id': lastid, 'truck': truck, 'bruto': weight})
     elif type == "out":
-        return jsonify({'id': lastid, 'truck': truck, 'bruto': weight, 'truckTara': trucktara, 'neto': neto})
+        return jsonify({'id': lastid, 'truck': truck, 'bruto': in_bruto, 'truckTara': trucktara, 'neto': neto})
 
 def POSTweight(direction, truck, containers, weight, weight_unit, force, produce):
     checkSyntax(direction, weight_unit, containers)

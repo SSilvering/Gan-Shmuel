@@ -34,3 +34,13 @@ class DB_Module(object):
         #row_list is a list containing tuples
 
         return rows_list
+
+    def insert_new_data(self,QUERY):
+        conn = self.getConnection()
+        cur = conn.cursor()
+
+        for query in QUERY:
+            cur.execute(query)
+        conn.commit()
+
+    #def update_table(self,QUERY):

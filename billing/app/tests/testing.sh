@@ -1,5 +1,5 @@
 #!/bin/bash
-pushd /app/app/tests/
+pushd /app/tests/
 echo "Testing provider"
 chmod u+x ./test_provider_post_put.sh
 #./test_provider_post_put.sh

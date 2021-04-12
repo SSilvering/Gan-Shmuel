@@ -14,6 +14,8 @@ chmod u+x ./post_rates_test.py
 chmod u+x ./put_truck_test.py
 cd ../../
 
+export PATH="$HOME/.local/bin:$PATH"
+
 echo "testing post/rates"
 python3 -m app.tests.post_rates_test
 [ $(echo "$?") -eq 1 ] && exit 1

@@ -4,6 +4,7 @@ import unittest
 from app.server.db.models import *
 from os import path
 from app.server.db.helper import helper
+import sys
 
 
 class TruckTest(TestCase):
@@ -16,13 +17,13 @@ class TruckTest(TestCase):
         # return create_app(config_file=f'{path.dirname(path.realpath(__file__))}/settings.py')
 
     def test_put_nonexist_provider_id(self):
-        print("testing put request without provider_id param ...")
+        #sys.stdout.write("testing put request without provider_id param ...")
         tid = "noclue"
         helper.add_instance(Truck, id=6, truck_id=tid, weight=500.5, provider_id=10)
         helper.commit_changes()
         with self.app.test_client() as c:
             resp = c.put(f'/truck/{tid}')
-            print("response: ", resp.data)
+            #sys.stdout.write("response: ", resp.data)
             self.assert_400(resp, "Fail:  put request without provider_id param")
 
     def test_put_nonexist_truck_id(self):
@@ -31,11 +32,11 @@ class TruckTest(TestCase):
         if truck is not None:
             db.session.remove(truck)
             helper.commit_changes()
-        print("testing put request with truck_id not found in truck table ...")
+        #sys.stdout.write("testing put request with truck_id not found in truck table ...")
 
         with self.app.test_client() as c:
             resp = c.put(f'/truck/{tid}')
-            print("response: ", resp.data)
+            #sys.stdout.write("response: " + resp.data)
             self.assert_400(resp, "Fail: put request with nonexistent truck param")
 
     def test_put_nonexistent_new_prov_id_in_providers(self):
@@ -44,11 +45,11 @@ class TruckTest(TestCase):
         helper.add_instance(Truck, id=6, truck_id=tid, weight=500.5, provider_id=pid)
         # helper.add_instance(Provider,id=pid,name="hanks")
         helper.commit_changes()
-        print("testing truck put request with new id that is not found in the providers table...")
+        #sys.stdout.write("testing truck put request with new id that is not found in the providers table...")
 
         with self.app.test_client() as c:
             resp = c.put(f'/truck/{tid}', data=dict(provider_id=15))
-            print("response: ", resp.data)
+            #sys.stdout.write("response: " + resp.data)
             self.assert_400(resp, "Fail: put request with nonexistent new_provider_id in providers table")
 
     def test_put_correct_request(self):
@@ -59,11 +60,11 @@ class TruckTest(TestCase):
         helper.add_instance(Provider, id=pid, name="john")
         helper.add_instance(Provider, id=new_pid, name="mario")
         helper.commit_changes()
-        print("testing correct truck put request ...")
+        #sys.stdout.write("testing correct truck put request ...")
 
         with self.app.test_client() as c:
             resp = c.put(f'/truck/{tid}', data=dict(provider_id=new_pid))
-            print("response: ", resp.data)
+            #sys.stdout.write("response: " + resp.data)
             self.assert_200(resp, "Fail: put request with correct request info")
 
     def tearDown(self):
@@ -74,4 +75,5 @@ class TruckTest(TestCase):
 
 
 if __name__ == '__main__':
-    test = TruckTest()
+    unittest.main()
+    # test = TruckTest()

@@ -1,8 +1,6 @@
 from weight_app import weight_app, requests, GETweight, POSTweight, GETunknown, GETitem, GEThealth, GETsession, POSTbatch_weight
 from time import gmtime, strftime
-from datetime import datetime
-from flask import request, jsonify,render_template
-import mysql.connector
+from flask import request, render_template
 from . import weight_app
 from .POSTweight import POSTweight
 from .GETweight import GETweight

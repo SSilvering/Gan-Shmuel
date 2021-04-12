@@ -1,5 +1,5 @@
 #!/bin/bash
-
+pushd /app/app/tests/
 echo "Testing provider"
 chmod u+x ./test_provider_post_put.sh
 #./test_provider_post_put.sh
@@ -24,5 +24,6 @@ echo "testing put/truck"
 python -m app.tests.put_truck_test
 [ $(echo "$?") -eq 1 ] && exit 1
 
+popd
 exit 0
 

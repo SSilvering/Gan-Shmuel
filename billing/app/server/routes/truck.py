@@ -11,11 +11,10 @@ truck_blueprint = Blueprint('truck_blueprint', __name__)
 def truck():
     if request.method == 'POST':
 
-        args = request.args
-        provider_name = args.get('provider_name')
-        truck_id = args.get('truck_id')
+        provider_id = (request.form and request.form["provider_id"]) or (request.json and request.json.get("provider_id"))
+        truck_id = (request.form and request.form["truck_id"]) or (request.json and request.json.get("truck_id"))
 
-        queried_provider = helper.get_one(Provider, name=provider_name)
+        queried_provider = helper.get_one(Provider, id=provider_id)
 
         if queried_provider and truck_id:
             helper.add_instance(Truck,

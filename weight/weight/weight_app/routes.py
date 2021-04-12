@@ -6,6 +6,7 @@ import mysql.connector
 from . import weight_app
 from .POSTweight import POSTweight
 from .GETweight import GETweight
+from .unknown_module import unkown_func
 from .db_module import DB_Module
 import json, csv
 
@@ -159,19 +160,4 @@ def batch_weight():
 
 @weight_app.route('/unknown', methods=['GET'])
 def unknown_weight():
-    query= "SELECT distinct id FROM containers WHERE weight IS NULL"
-    try:
-        db = DB_Module ()
-       
-    except:
-        print("my sql has failed for some weird reason :(")
-    print("connected")
-    #id_container = []
-    try:
-        data = db.fetch_new_data(query) #sent to db the object querry and read it fadi make it =]
-        
-        return ' '.join([str(elem) for elem in data])
-        
-    except:
-        print("my sql has failed for some weird reason :("), quit()
-    return "no unkown weights"
+    return unknown_func()

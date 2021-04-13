@@ -4,7 +4,7 @@ from weight_app import requests
 
 #a tuple of the all the apis that will be used in the project 
 def GEThealth():
-    api_tuple = ("index","batch-weight","unknown","item","session","post","weight")
+    api_tuple = ("index","unknown","item","session")
     for item in api_tuple:
         uri = f"http://localhost:8080/{item}"
         req = requests.get(uri)
